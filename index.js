@@ -19,16 +19,7 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html')); 
 });
 
-// The existing /users route is fine if you keep it.
-app.get('/users', (req, res) => {
-    const users = [
-        { id: 1, name: 'John Doe' },
-        { id: 2, name: 'Jane Smith' },
-        { id: 3, name: 'Alice Johnson' }
-    ];
-    res.json(users);
-});
-
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
+
 });
