@@ -19,33 +19,34 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        try {
-            // 1. Fetch the profile data
-            const response = await fetch('js/data/profiles.json');
+         try {
+            // 1. Fetch the profile data from the new API endpoint
+            const response = await fetch(`/api/profiles/${enteredId}`); // <-- UPDATED FETCH URL
+
+            if (response.status === 404) {
+                // FAILURE: Profile not found (ID is incorrect)
+                errorMessage.textContent = 'Identifikacijska številka ni pravilna.';
+                return;
+            }
             
             // Check if the request was successful
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
 
-            const profiles = await response.json();
+            const userProfile = await response.json(); // API returns a single profile object
             
-            // 2. Check if the entered ID exists in the data
-            const userProfile = profiles.find(profile => profile.id === enteredId);
-
-            if (userProfile) {
+            // 2. We already know the profile exists from the 404 check
+            if (userProfile && userProfile.id) { 
                 // SUCCESS: ID is correct
                 
-                // Optional: Store the ID or profile data in local storage/session storage 
-                // so the profile page can access it.
                 sessionStorage.setItem('loggedInUserId', enteredId); 
 
                 // 3. Redirect to the profile page
-                // The profile page will use the stored ID to load the correct data
                 window.location.href = `profile.html?id=${enteredId}`; 
 
             } else {
-                // FAILURE: ID is incorrect
+                // FALLBACK: ID is incorrect
                 errorMessage.textContent = 'Identifikacijska številka ni pravilna.';
             }
 
@@ -54,4 +55,5 @@ document.addEventListener('DOMContentLoaded', () => {
             errorMessage.textContent = 'Prišlo je do napake pri prijavi. Poskusite znova.';
         }
     });
+
 });
