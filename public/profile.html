@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/jpg" href="images/Logo.jpg">
+    <title>Uporabniški Profil</title>
+    <link rel="stylesheet" href="css/profil.css">
+</head>
+
+<body>
+    <header class="glavna-glava">
+        <div class="logotip-obmocje">
+            <img src="images/LogoNapis.png" alt="Logotip">
+        </div>
+
+        <nav class="nav-povezave">
+            <ul>
+                <li><a href="https://www.lpt.si/">LPT</a></li>
+                <li><a href="profile.html">Novice</a></li>
+                <li><a href="#" id="gumb-odjava">Sporočila</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="stran-vsebnik">
+
+        <aside class="profil-stranska-vrstica">
+            <div class="profil-kartica">
+                <h2 class="prikaz-uporabniskega-imena" id="ime"></h2>
+                <p class="naziv"></p>
+                <button class="gumb-uredi">Uredi Profil</button>
+            </div>
+            <ul class="stranska-vrstica-meni">
+                <li><a href="#" class="aktivna">Profil</a></li>
+                <li><a href="#">Osebna statistika</a></li>
+                <li><a href="#">Razpoložljiva dela</a></li>
+                <li><a href="#">Popis dela</a></li>
+                <li><a href="#">Koledar</a></li>
+
+                <!-- <li><a href="#">Obračun</a></li>
+
+                <li><a href="#">Upravljanje Projektov</a></li>
+                <li><a href="#">Upravljanje Nalog</a></li>
+                <li><a href="#">Upravljanje Opravljenih Del</a></li>
+                <li><a href="#">Upravljanje Časovnic</a></li>
+                <li><a href="#">Upravljanje Naloga</a></li>
+                <li><a href="#">Upravljanje Opravljenih Del</a></li>
+
+
+                <li><a href="#">Upravljanje Vsebin</a></li>
+                <li><a href="#">Upravljanje Dokumentov</a></li>
+
+                <li><a href="#">Upravljanje Uporabnikov</a></li>
+                <li><a href="#">Upravljanje Profilov</a></li>
+                <li><a href="#">Upravljanje Dovoljenj</a></li>
+
+                <li><a href="#">Nastavitve</a></li>
+                <li><a href="#">Dejavnost</a></li> -->
+            </ul>
+        </aside>
+
+        <section class="glavno-obmocje-vsebine">
+            <h1 class="naslov-strani">Dobrodošli nazaj, <span id="ime-dobrodoslice"></span></h1>
+
+            <div class="statistika-mreza">
+                <div class="stat-kartica">
+                    <h3>546</h3>
+                    <p>Evidenca delovnega časa</p>
+                </div>
+                <div class="stat-kartica">
+                    <h3>234</h3>
+                    <p>Sporočil</p>
+                </div>
+                <div class="stat-kartica">
+                    <h3>12</h3>
+                    <p>Porabljen letni dopust</p>
+                </div>
+            </div>
+
+            <div class="vsebinski-panel">
+                <h2>Podrobnosti</h2>
+                <div class="podrobnosti-profila">
+                    <p><strong>Ime:</strong> <span id="ime"></span></p>
+                    <p><strong>Naziv:</strong> <span id="naziv"></span></p>
+                    <p><strong>Email:</strong> <span id="email"></span></p>
+                    <p><strong>Telefon:</strong> <span id="telefon"></span></p>
+                </div>
+
+                <h2>Statistika</h2>
+
+            </div>
+
+        </section>
+        
+    </main>
+    
+
+    <script src="js/profileRenderer.js"></script>
+
+</body>
+
+
+
+</html>

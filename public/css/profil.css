@@ -1,0 +1,226 @@
+/*
+ * Barvna Paleta:
+ * --primarna-barva: Živahna zelena za poudarke
+ * --sekundarna-barva: Svetlo siva za ozadja
+ * --besedilo-barva: Temno siva za berljivost
+ * --senca-svetla: Subtilna senca za globino
+*/
+:root {
+    --primarna-barva: #28a745; /* Živahna zelena */
+    --sekundarna-barva: #f8f9fa; /* Zelo svetlo siva */
+    --besedilo-barva: #343a40; /* Temno siva */
+    --povezava-premik-barva: #218838; /* Temnejša zelena za premik (hover) */
+    --kartica-ozadje: #ffffff;
+    --senca-svetla: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* --- Osnovni Stili --- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Poppins', sans-serif; /* Moderna, čista pisava */
+    background-color: var(--sekundarna-barva);
+    color: var(--besedilo-barva);
+    line-height: 1.6;
+}
+
+a {
+    text-decoration: none;
+    color: var(--primarna-barva);
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: var(--povezava-premik-barva);
+}
+
+/* --- Glava & Navigacija --- */
+.glavna-glava {
+    background-color: var(--kartica-ozadje);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    padding: 1rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky; /* Fiksna glava za sodoben občutek */
+    top: 0;
+    z-index: 100;
+}
+
+.logotip-obmocje img {
+    height: 40px; /* Prilagodi velikost logotipa */
+}
+
+.nav-povezave ul {
+    list-style: none;
+    display: flex;
+    gap: 2rem;
+}
+
+.nav-povezave a {
+    font-weight: 600;
+    color: var(--besedilo-barva);
+    padding: 0.5rem 0;
+}
+
+.nav-povezave a:hover {
+    color: var(--primarna-barva);
+    border-bottom: 2px solid var(--primarna-barva);
+}
+
+
+/* --- Glavna Postavitev Strani --- */
+.stran-vsebnik {
+    display: flex;
+    gap: 2rem;
+    padding: 2rem 3rem;
+    max-width: 1400px;
+    margin: 0 auto; /* Centriranje celotne postavitve */
+}
+
+/* --- Stranska Vrstica (Informacije o Profilu) --- */
+.profil-stranska-vrstica {
+    flex: 0 0 280px; /* Fiksna širina stranske vrstice */
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.profil-kartica {
+    background-color: var(--kartica-ozadje);
+    border-radius: 12px;
+    box-shadow: var(--senca-svetla);
+    padding: 2rem;
+    text-align: center;
+}
+
+.prikaz-uporabniskega-imena {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.naziv {
+    color: #6c757d;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.gumb-uredi {
+    background-color: var(--primarna-barva);
+    color: white;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+}
+
+.gumb-uredi:hover {
+    background-color: var(--povezava-premik-barva);
+}
+
+.stranska-vrstica-meni {
+    list-style: none;
+    background-color: var(--kartica-ozadje);
+    border-radius: 12px;
+    box-shadow: var(--senca-svetla);
+    padding: 1rem 0;
+}
+
+.stranska-vrstica-meni li a {
+    display: block;
+    padding: 0.75rem 2rem;
+    color: var(--besedilo-barva);
+    font-weight: 400;
+    border-left: 3px solid transparent;
+}
+
+.stranska-vrstica-meni li a:hover,
+.stranska-vrstica-meni li a.aktivna {
+    background-color: var(--sekundarna-barva);
+    color: var(--primarna-barva);
+    border-left: 3px solid var(--primarna-barva);
+    font-weight: 600;
+}
+
+/* --- Glavno Območje Vsebine --- */
+.glavno-obmocje-vsebine {
+    flex-grow: 1;
+}
+
+.naslov-strani {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--besedilo-barva);
+    margin-bottom: 1.5rem;
+}
+
+.naslov-strani #ime-dobrodoslice {
+    color: var(--primarna-barva);
+}
+
+/* Mreža Statistik */
+.statistika-mreza {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.stat-kartica {
+    background-color: var(--kartica-ozadje);
+    border-radius: 12px;
+    box-shadow: var(--senca-svetla);
+    padding: 1.5rem;
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.stat-kartica:hover {
+    transform: translateY(-5px); /* Učinek dviga ob premiku miške */
+}
+
+.stat-kartica h3 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--primarna-barva);
+    line-height: 1;
+}
+
+.stat-kartica p {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-top: 0.25rem;
+}
+
+/* Vsebinski Paneli */
+.vsebinski-panel {
+    background-color: var(--kartica-ozadje);
+    border-radius: 12px;
+    box-shadow: var(--senca-svetla);
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+.vsebinski-panel h2 {
+    font-size: 1.5rem;
+    border-bottom: 1px solid var(--sekundarna-barva);
+    padding-bottom: 0.75rem;
+    font-weight: 600;
+}
+
+.vsebinski-panel p {
+    color: #6c757d;  
+}
+
+.podrobnosti-profila {
+    margin-bottom: 1rem;
+}
+
+/*----------------------------------Statistika----------------------------------------------------- */
