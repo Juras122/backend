@@ -1,45 +1,18 @@
 [
-
-  {
-    "dovoljenja": "admin",
-    "profil": "1",
-    "osebna statistika": "1",
-    "koledaer": "1",
-    "projektne naloge": "1",
-    "upravljanje uporabnikov": "1",
-    "upravljanje profilov": "1",
-    "upravljanje dovoljenj": "1",
-    "upravljanje sistemskih nastavitev": "1",
-    "upravljanje vsebin": "1",
-    "upravljanje dokumentov": "1",
-    "upravljanje komunikacije": "1",
-    "upravljanje poročil": "1",
-    "upravljanje integracij": "1",
-    "upravljanje varnostnih nastavitev": "1",
-    "upravljanje arhivov": "1"
-  },
-
   {
     "id": "123456789",
-    "ime": "admin001",
+    "ime": "Admin Uporabnik",
     "naziv": "Administrator",
     "email": "admin001@example.com",
     "telefon": "+38640123456",
-
-    "Dovoljenja": "admin",
-    "Profil": "1"
+    "dovoljenja": "admin"
   },
-
   {
     "id": "111111111",
     "ime": "Jure Tušar Lajevec",
     "naziv": "Vzdrževalec",
     "email": "jure@example.com",
     "telefon": "+38640123457",
-    
-    "Dovoljenja": "Worker",
-    "Profil": "1"
+    "dovoljenja": "Worker"
   }
-
-
 ]
