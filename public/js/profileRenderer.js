@@ -16,28 +16,38 @@ document.addEventListener('DOMContentLoaded', () => {
     // Function to fetch data and render the profile
     async function loadAndRenderProfile(id) {
         try {
-            // Fetch the profile data (adjust path if needed)
-            const response = await fetch('js/data/profiles.json');
+            // Fetch the profile data from the new API endpoint
+            const response = await fetch(`/api/profiles/${id}`); // <-- UPDATED FETCH URL
+
+            if (response.status === 404) {
+                // Profile not found in database
+                console.error(`Profile not found for ID: ${id}`);
+                renderPlaceholderProfile(id, 'Profil ni najden v bazi.');
+                return;
+            }
 
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
 
-            const profiles = await response.json();
+            // The API returns a single user object
+            const userProfile = await response.json();
 
-            // Find the user profile matching the ID
-            const userProfile = profiles.find(profile => profile.id === id);
-
-            if (userProfile) {
+            if (userProfile && userProfile.id) {
                 // SUCCESS: Profile found, now render the data
+                // Note: Ensure your renderProfileData uses lowercase property names
+                // like profile.ime, profile.naziv, etc., as PostgreSQL defaults to lowercase column names.
                 renderProfileData(userProfile);
             } else {
-                // FAILURE: Profile not found for the given ID
-                console.error(`Profile not found for ID: ${id}`);
-                // Render a placeholder or error message
-                renderPlaceholderProfile(id);
+                console.error(`Invalid profile data for ID: ${id}`);
+                renderPlaceholderProfile(id, 'Neznana napaka pri pridobivanju profila.');
             }
 
+        } catch (error) {
+            console.error('Napaka pri nalaganju podatkov:', error);
+            renderPlaceholderProfile(id, 'Prišlo je do napake pri povezavi z bazo.');
+        }
+    }
         } catch (error) {
             console.error('Error loading or parsing profile data:', error);
             // Render an error state
@@ -104,4 +114,5 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initiate the profile loading process
     loadAndRenderProfile(userId);
+
 });
