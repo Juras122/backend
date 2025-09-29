@@ -1,83 +1,86 @@
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Get the user ID from the URL query parameter
+    // URL bi moral izgledati nekako takole: /profile.html?id=1
     const urlParams = new URLSearchParams(window.location.search);
     const userId = urlParams.get('id');
 
     // Check if an ID was provided
     if (!userId) {
-        console.error('No user ID found in the URL. Redirecting to login.');
-        // Optionally redirect to the login page if no ID is found
-        // window.location.href = 'index.html'; // Assuming index.html is the login page
-        // We'll stop execution here if no ID is present
-        renderPlaceholderProfile();
+        console.error('Ni ID-ja uporabnika v URL-ju. Prikazujem začasni profil.');
+        // Če ID ni podan, prikažemo napako/nadomestno vsebino
+        renderPlaceholderProfile('Neznano', 'ID uporabnika ni bil najden v URL-ju.');
         return;
     }
 
-    // Function to fetch data and render the profile
+    // Funkcija za pridobivanje podatkov s strežnika (Render Backend API) in prikaz profila
     async function loadAndRenderProfile(id) {
         try {
-            // Fetch the profile data from the new API endpoint
-            const response = await fetch(`/api/profiles/${id}`); // <-- UPDATED FETCH URL
+            // Fetch the profile data from the backend API endpoint
+            // Ta klic se poveže z Node.js strežnikom (server.js), ki dostopa do baze!
+            const response = await fetch(`/api/profiles/${id}`); 
 
             if (response.status === 404) {
-                // Profile not found in database
-                console.error(`Profile not found for ID: ${id}`);
+                // Profil ni najden v bazi podatkov
+                console.error(`Profil ni najden za ID: ${id}`);
                 renderPlaceholderProfile(id, 'Profil ni najden v bazi.');
                 return;
             }
 
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                // Obravnava drugih HTTP napak
+                throw new Error(`HTTP napaka! Status: ${response.status}`);
             }
 
-            // The API returns a single user object
+            // Backend vrne en sam objekt uporabnika v JSON formatu
             const userProfile = await response.json();
 
             if (userProfile && userProfile.id) {
-                // SUCCESS: Profile found, now render the data
-                // Note: Ensure your renderProfileData uses lowercase property names
-                // like profile.ime, profile.naziv, etc., as PostgreSQL defaults to lowercase column names.
+                // USPEH: Profil najden, zdaj prikaži podatke
+                // Opozorilo: Predpostavljamo, da so imena stolpcev v bazi (PostgreSQL)
+                // v malih črkah: ime, naziv, email, telefon
                 renderProfileData(userProfile);
             } else {
-                console.error(`Invalid profile data for ID: ${id}`);
+                console.error(`Neveljavni podatki profila za ID: ${id}`);
                 renderPlaceholderProfile(id, 'Neznana napaka pri pridobivanju profila.');
             }
 
         } catch (error) {
             console.error('Napaka pri nalaganju podatkov:', error);
-            renderPlaceholderProfile(id, 'Prišlo je do napake pri povezavi z bazo.');
-        }
-    }
-        } catch (error) {
-            console.error('Error loading or parsing profile data:', error);
-            // Render an error state
-            renderPlaceholderProfile(id, 'Prišlo je do napake pri nalaganju podatkov.');
+            // Prikaz napake pri povezavi (npr. strežnik ne deluje)
+            renderPlaceholderProfile(id, 'Prišlo je do napake pri povezavi s strežnikom ali bazo.');
         }
     }
 
-    // Function to update the HTML elements with profile data
+    // Funkcija za posodobitev HTML elementov s podatki profila
     function renderProfileData(profile) {
-        // Update the user's name in the sidebar and welcome message
-        const nameElements = document.querySelectorAll('#ime, #ime-dobrodoslice');
+        // Posodobitev imena v stranski vrstici in naslovu
+        // Uporabljamo querySelectorAll, ker se #ime pojavi dvakrat (v stranski vrstici in podrobnostih)
+        const nameElements = document.querySelectorAll('#ime');
         nameElements.forEach(element => {
-            // We'll use the first word of 'ime' for the welcome message, and the full name for the sidebar
-            if (element.id === 'ime-dobrodoslice') {
-                 // Get the first name for the welcome message
-                const firstName = profile.ime.split(' ')[0]; 
-                element.textContent = firstName || 'Uporabnik';
-            } else {
-                // Use the full name for the sidebar
-                element.textContent = profile.ime || 'Neznano Ime';
-            }
+            element.textContent = profile.ime || 'Neznano Ime';
         });
 
-        // Update the user's title/naziv in the sidebar
-        const nazivElements = document.querySelectorAll('#naziv');
-        nazivElements.forEach(element => {
-            element.textContent = profile.naziv || 'Splošni Uporabnik';
-        });
+        // Posodobitev imena za pozdrav (samo prva beseda)
+        const welcomeNameElement = document.getElementById('ime-dobrodoslice');
+        if (welcomeNameElement) {
+            // Pridobitev prve besede za pozdrav ("Dobrodošli nazaj, [Janez]")
+            const firstName = profile.ime ? profile.ime.split(' ')[0] : 'Uporabnik';
+            welcomeNameElement.textContent = firstName;
+        }
 
-        // Update profile details in the content panel
+        // Posodobitev naziva v stranski vrstici (uporabljen je razred '.naziv')
+        const nazivSidebarElement = document.querySelector('.naziv');
+        if (nazivSidebarElement) {
+            nazivSidebarElement.textContent = profile.naziv || 'Splošni Uporabnik';
+        }
+        
+        // Posodobitev naziva v podrobnostih (#naziv)
+        const nazivDetailsElement = document.getElementById('naziv');
+        if (nazivDetailsElement) {
+            nazivDetailsElement.textContent = profile.naziv || 'Ni podatka';
+        }
+
+        // Posodobitev podrobnosti profila
         const emailElement = document.getElementById('email');
         if (emailElement) {
             emailElement.textContent = profile.email || 'Ni podatka';
@@ -89,30 +92,31 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Function to handle cases where the profile can't be loaded or found
+    // Funkcija za obravnavo primerov, ko profila ni mogoče naložiti ali najti
     function renderPlaceholderProfile(id = 'Neznano', message = 'Profil ni najden.') {
-        // This is a minimal fallback implementation
+        // Nastavitev imena v stranski vrstici in pozdravu na 'Gost'
         const nameElements = document.querySelectorAll('#ime, #ime-dobrodoslice');
         nameElements.forEach(element => {
             element.textContent = 'Gost';
         });
 
-        const nazivElement = document.querySelector('.uporabniski-naziv');
-        if (nazivElement) {
-            nazivElement.textContent = 'Gost';
-        }
-
+        // Nastavitev naziva na 'Gost'
+        const nazivElements = document.querySelectorAll('.naziv, #naziv');
+        nazivElements.forEach(element => {
+            element.textContent = 'Gost';
+        });
+        
+        // Prikaz opozorila v glavnem delu vsebine
         const contentPanel = document.querySelector('.vsebinski-panel');
         if (contentPanel) {
             contentPanel.innerHTML = `
                 <h2>${message}</h2>
-                <p>Uporabniški ID: ${id}. Prosimo, poskusite se prijaviti ponovno.</p>
+                <p>Uporabniški ID: ${id}. Prosimo, preverite URL ali se poskusite prijaviti ponovno.</p>
             `;
         }
     }
 
-
-    // Initiate the profile loading process
+    // Začetek postopka nalaganja profila, če je ID na voljo
     loadAndRenderProfile(userId);
 
 });
