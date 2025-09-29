@@ -1,17 +1,19 @@
-// index.js (UPDATED for Render PostgreSQL)
-
+//KNJIŽNICE
 const express = require('express');
 const path = require('path');
-const { Pool } = require('pg'); // 1. IMPORT PG POOL
+const { Pool } = require('pg');
 
+//Nastavljanje expressa in porta
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 // 2. DATABASE CONNECTION SETUP
 // Render automatically provides a DATABASE_URL environment variable.
 // We must configure SSL for a secure connection, as required by Render.
+//Nastavitve kje deluje
 const isProduction = process.env.NODE_ENV === 'production';
 
+//Zaščita in optimizacija
 const pool = new Pool({
     // Use the DATABASE_URL environment variable
     connectionString: process.env.DATABASE_URL,
@@ -59,4 +61,5 @@ app.get('/', (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
+
 
