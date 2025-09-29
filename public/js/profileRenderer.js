@@ -1,122 +1,84 @@
-document.addEventListener('DOMContentLoaded', () => {
-    // 1. Get the user ID from the URL query parameter
-    // URL bi moral izgledati nekako takole: /profile.html?id=1
+// Nastavite to funkcijo kot asinhrono, saj bomo klicali API
+async function naloziInPrikaziProfil() {
+    // 1. PRIDOBI ID UPORABNIKA IZ URL-ja
+    // Predpostavimo, da je ID uporabnika v URL-ju, npr. /profile.html?id=1
     const urlParams = new URLSearchParams(window.location.search);
     const userId = urlParams.get('id');
 
-    // Check if an ID was provided
+    // Če ID ni najden, prikaži napako in prekini
     if (!userId) {
-        console.error('Ni ID-ja uporabnika v URL-ju. Prikazujem začasni profil.');
-        // Če ID ni podan, prikažemo napako/nadomestno vsebino
-        renderPlaceholderProfile('Neznano', 'ID uporabnika ni bil najden v URL-ju.');
+        console.error("Napaka: ID uporabnika ni najden v URL parametrih.");
+        // Lahko bi preusmerili na stran za prijavo ali prikazali sporočilo na strani
+        document.querySelector('.glavno-obmocje-vsebine').innerHTML = '<h1>Napaka: Profil ni določen.</h1>';
         return;
     }
 
-    // Funkcija za pridobivanje podatkov s strežnika (Render Backend API) in prikaz profila
-    async function loadAndRenderProfile(id) {
-        try {
-            // Fetch the profile data from the backend API endpoint
-            // Ta klic se poveže z Node.js strežnikom (server.js), ki dostopa do baze!
-            const response = await fetch(`/api/profiles/${id}`); 
+    // 2. KLIC API-ja
+    try {
+        // Kličemo API končno točko, ki jo določa Express strežnik: /api/profiles/:id
+        const response = await fetch(`/api/profiles/${userId}`);
 
+        if (!response.ok) {
+            // Če strežnik vrne status 404 ali drug status napake
             if (response.status === 404) {
-                // Profil ni najden v bazi podatkov
-                console.error(`Profil ni najden za ID: ${id}`);
-                renderPlaceholderProfile(id, 'Profil ni najden v bazi.');
-                return;
-            }
-
-            if (!response.ok) {
-                // Obravnava drugih HTTP napak
-                throw new Error(`HTTP napaka! Status: ${response.status}`);
-            }
-
-            // Backend vrne en sam objekt uporabnika v JSON formatu
-            const userProfile = await response.json();
-
-            if (userProfile && userProfile.id) {
-                // USPEH: Profil najden, zdaj prikaži podatke
-                // Opozorilo: Predpostavljamo, da so imena stolpcev v bazi (PostgreSQL)
-                // v malih črkah: ime, naziv, email, telefon
-                renderProfileData(userProfile);
+                document.querySelector('.glavno-obmocje-vsebine').innerHTML = '<h1>Profil ni najden (404)</h1><p>Uporabnik s tem ID-jem ne obstaja.</p>';
             } else {
-                console.error(`Neveljavni podatki profila za ID: ${id}`);
-                renderPlaceholderProfile(id, 'Neznana napaka pri pridobivanju profila.');
+                // Druga napaka strežnika (npr. 500)
+                document.querySelector('.glavno-obmocje-vsebine').innerHTML = `<h1>Napaka pri nalaganju: ${response.status}</h1>`;
             }
-
-        } catch (error) {
-            console.error('Napaka pri nalaganju podatkov:', error);
-            // Prikaz napake pri povezavi (npr. strežnik ne deluje)
-            renderPlaceholderProfile(id, 'Prišlo je do napake pri povezavi s strežnikom ali bazo.');
+            console.error(`API klic neuspešen: ${response.status}`);
+            return;
         }
+
+        // Pretvorba odgovora v JSON
+        const userData = await response.json();
+
+        // 3. PRIKAZ PODATKOV NA STRANI
+        prikaziPodatkeProfila(userData);
+
+    } catch (error) {
+        // Napaka pri omrežnem klicu (npr. strežnik ne deluje)
+        console.error("Prišlo je do napake pri pridobivanju podatkov profila:", error);
+        document.querySelector('.glavno-obmocje-vsebine').innerHTML = '<h1>Napaka povezave</h1><p>Ni mogoče vzpostaviti povezave s strežnikom. Poskusite znova kasneje.</p>';
     }
+}
 
-    // Funkcija za posodobitev HTML elementov s podatki profila
-    function renderProfileData(profile) {
-        // Posodobitev imena v stranski vrstici in naslovu
-        // Uporabljamo querySelectorAll, ker se #ime pojavi dvakrat (v stranski vrstici in podrobnostih)
-        const nameElements = document.querySelectorAll('#ime');
-        nameElements.forEach(element => {
-            element.textContent = profile.ime || 'Neznano Ime';
-        });
+// Funkcija za posodabljanje elementov DOM-a s podatki profila
+function prikaziPodatkeProfila(profil) {
+    // Posodobitev elementov v stranski vrstici in glavi
+    const userNameDisplayElements = document.querySelectorAll('#ime');
+    userNameDisplayElements.forEach(element => {
+        // Predpostavimo, da ima baza stolpec 'ime'
+        element.textContent = profil.ime || profil.username || 'Neznano Ime';
+    });
 
-        // Posodobitev imena za pozdrav (samo prva beseda)
-        const welcomeNameElement = document.getElementById('ime-dobrodoslice');
-        if (welcomeNameElement) {
-            // Pridobitev prve besede za pozdrav ("Dobrodošli nazaj, [Janez]")
-            const firstName = profile.ime ? profile.ime.split(' ')[0] : 'Uporabnik';
-            welcomeNameElement.textContent = firstName;
-        }
+    // Posodobitev elementa naziva v stranski vrstici in podrobnostih
+    const titleDisplayElements = document.querySelectorAll('.naziv, #naziv');
+    titleDisplayElements.forEach(element => {
+        // Predpostavimo, da ima baza stolpec 'naziv' (ali 'title')
+        element.textContent = profil.naziv || profil.title || 'Neznan Naziv';
+    });
+    
+    // Posodobitev imena za pozdrav
+    document.getElementById('ime-dobrodoslice').textContent = profil.ime || profil.username || 'Uporabnik';
 
-        // Posodobitev naziva v stranski vrstici (uporabljen je razred '.naziv')
-        const nazivSidebarElement = document.querySelector('.naziv');
-        if (nazivSidebarElement) {
-            nazivSidebarElement.textContent = profile.naziv || 'Splošni Uporabnik';
-        }
-        
-        // Posodobitev naziva v podrobnostih (#naziv)
-        const nazivDetailsElement = document.getElementById('naziv');
-        if (nazivDetailsElement) {
-            nazivDetailsElement.textContent = profile.naziv || 'Ni podatka';
-        }
 
-        // Posodobitev podrobnosti profila
-        const emailElement = document.getElementById('email');
-        if (emailElement) {
-            emailElement.textContent = profile.email || 'Ni podatka';
-        }
+    // Posodobitev ostalih podrobnosti v glavnem območju
+    // Predpostavljeni stolpci: email, telefon
+    document.getElementById('email').textContent = profil.email || 'N/A';
+    document.getElementById('telefon').textContent = profil.telefon || 'N/A';
+}
 
-        const telefonElement = document.getElementById('telefon');
-        if (telefonElement) {
-            telefonElement.textContent = profile.telefon || 'Ni podatka';
-        }
+// 4. Klic funkcije ob nalaganju strani
+naloziInPrikaziProfil();
+
+// Dodatno: Logika za gumb za odjavo (osnovna placeholder implementacija)
+document.getElementById('gumb-odjava').addEventListener('click', (e) => {
+    e.preventDefault();
+    if (confirm("Ali se res želite odjaviti?")) {
+        // Sem vstavite logiko za odjavo (npr. brisanje piškotka/žetona)
+        console.log("Uporabnik odjavljen.");
+        alert("Uspešno ste se odjavili! (To je le simulacija)");
+        // window.location.href = '/login.html'; // Preusmeritev na stran za prijavo
     }
-
-    // Funkcija za obravnavo primerov, ko profila ni mogoče naložiti ali najti
-    function renderPlaceholderProfile(id = 'Neznano', message = 'Profil ni najden.') {
-        // Nastavitev imena v stranski vrstici in pozdravu na 'Gost'
-        const nameElements = document.querySelectorAll('#ime, #ime-dobrodoslice');
-        nameElements.forEach(element => {
-            element.textContent = 'Gost';
-        });
-
-        // Nastavitev naziva na 'Gost'
-        const nazivElements = document.querySelectorAll('.naziv, #naziv');
-        nazivElements.forEach(element => {
-            element.textContent = 'Gost';
-        });
-        
-        // Prikaz opozorila v glavnem delu vsebine
-        const contentPanel = document.querySelector('.vsebinski-panel');
-        if (contentPanel) {
-            contentPanel.innerHTML = `
-                <h2>${message}</h2>
-                <p>Uporabniški ID: ${id}. Prosimo, preverite URL ali se poskusite prijaviti ponovno.</p>
-            `;
-        }
-    }
-
-    // Začetek postopka nalaganja profila, če je ID na voljo
-    loadAndRenderProfile(userId);
-
 });
