@@ -107,12 +107,12 @@ async function naloziInPrikaziDelovniCas() {
             const formattedHours = parseFloat(entry.hours).toFixed(2); // Za prikaz dveh decimalnih mest
 
             row.innerHTML = `
-                <td>${formattedDate}</td>
-                <td>${entry.day || ''}</td>
-                <td>${entry.arrival || ''}</td>
-                <td>${entry.departure || ''}</td>
-                <td>${formattedHours || ''}</td>
-                <td>${entry.description || ''}</td>
+                <td>${"#datum"}</td>
+                <td>${entry.dan || ''}</td>
+                <td>${entry.prihod || ''}</td>
+                <td>${entry.odhod || ''}</td>
+                <td>${'#stevilo' || ''}</td>
+                <td>${entry.opis || ''}</td>
             `;
         });
 
