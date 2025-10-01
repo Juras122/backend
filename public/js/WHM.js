@@ -23,11 +23,36 @@ const DELOVNI_CAS_API_URL = `/api/workhours/${userId}`;
 // -----------------------------------------------------------------------------------
 // Pridobi uporabnikov profil (ime in naziv) in ga prikaže v stranski vrstici.
 async function naloziInPrikaziProfil() {
-    // ... (ta funkcija ostane nespremenjena) ...
-    // ... (ostala koda ostane nespremenjena, razen spodnjih treh funkcij) ...
+    if (!userId) {
+        console.error('ID uporabnika ni najden v URL-ju.');
+        return;
+    }
+    try {
+        const response = await fetch(PROFILI_API_URL);
+        if (response.status === 404) {
+            console.error('Profil ni najden.');
+            return;
+        }
+        if (!response.ok) {
+            throw new Error(`HTTP napaka! Status: ${response.status}`);
+        }
+        const userProfile = await response.json();
+        prikaziPodatkeProfila(userProfile);
+    } catch (error) {
+        console.error('Napaka pri nalaganju profila:', error);
+    }
 }
+
 function prikaziPodatkeProfila(profil) {
-    // ... (ta funkcija ostane nespremenjena) ...
+    const userNameDisplayElements = document.querySelectorAll('#ime');
+    userNameDisplayElements.forEach(element => {
+        element.textContent = profil.ime || 'Neznano Ime';
+    });
+
+    const titleDisplayElements = document.querySelectorAll('.naziv, #naziv');
+    titleDisplayElements.forEach(element => {
+        element.textContent = profil.naziv || 'Neznan Naziv';
+    });
 }
 // -----------------------------------------------------------------------------------
 
@@ -90,5 +115,6 @@ document.addEventListener('DOMContentLoaded', () => {
     naloziInPrikaziProfil();
     naloziInPrikaziDelovniCas();
 });
+
 
 // ... (nadaljevanje event listenerjev) ...
