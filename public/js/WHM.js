@@ -114,6 +114,12 @@ async function naloziInPrikaziDelovniCas() {
                 <td>${'#stevilo' || ''}</td>
                 <td>${entry.opis || ''}</td>
             `;
+
+            const datumElement = document.querySelectorAll('#datum');
+            datumElement.forEach(element => {
+                element.textContent = workHoursData.datum || 'N/A';
+            });
+
         });
 
 
