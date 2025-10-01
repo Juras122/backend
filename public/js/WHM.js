@@ -88,22 +88,6 @@ async function naloziInPrikaziDelovniCas() {
     }
 }
 
-/**
- * Pomožna funkcija za prikaz splošne napake.
- */
-function prikaziSporociloNapake(tabelaTeloElement) { // SPREMENJENO: DODAJE ELEMENT KOT PARAMETER
-    if (!tabelaTeloElement) return;
-
-    tabelaTeloElement.innerHTML = `
-        <tr>
-            <td colspan="6" style="text-align: center; padding: 20px; color: red;">
-                Prišlo je do napake pri nalaganju podatkov.
-            </td>
-        </tr>
-    `;
-}
-
-
 // Ko je stran naložena, zaženemo nalaganje podatkov
 document.addEventListener('DOMContentLoaded', () => {
     naloziInPrikaziProfil();
@@ -112,4 +96,5 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 // ... (nadaljevanje event listenerjev) ...
+
 
