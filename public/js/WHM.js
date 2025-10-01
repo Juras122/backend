@@ -38,7 +38,7 @@ async function naloziInPrikaziDelovniCas() {
     if (!userId) return;
     
     // PRIDOBITEV ELEMENTA ZNOTRAJ FUNKCIJE!
-    const tabelaTeloElement = document.getElementById('tabela-telo');
+    const tabelaTeloElement = document.getElementById('telo-tabele');
     if (!tabelaTeloElement) {
         console.error('Element tabele (tabelaTeloElement) ni najden. Preveri ID "tabela-telo" v HTML-ju.');
         return;
@@ -96,5 +96,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 // ... (nadaljevanje event listenerjev) ...
+
 
 
