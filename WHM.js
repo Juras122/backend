@@ -1,6 +1,4 @@
-const loggedInUserId = sessionStorage.getItem('loggedInUserId');
-
-console.log(${loggedInUserId});
+/* const loggedInUserId = sessionStorage.getItem('loggedInUserId');
 
 // Preverite, ali je uporabnik prijavljen
 if (!loggedInUserId) {
@@ -8,11 +6,7 @@ if (!loggedInUserId) {
     window.location.href = 'Prijava.html';
 }
 
-
-
 //Posodobiko URL z ID-jem uporabnika
 const url = new URL(window.location.href);
 url.searchParams.set('id', loggedInUserId);
-
-window.history.replaceState({}, '', url);
-
+window.history.replaceState({}, '', url); */

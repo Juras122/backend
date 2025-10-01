@@ -73,6 +73,14 @@ function prikaziPodatkeProfila(profil) {
 // 4. Klic funkcije ob nalaganju strani
 naloziInPrikaziProfil();
 
+//Ce pritisnemo gumb link WHM.html, nas preusmeri na WHM.html z id-jem uporabnika v URL-ju window.location.href = `Profil.html?id=${enteredId}`;
+if (document.getElementById('WHM.html')) {
+    document.getElementById('WHM.html').addEventListener('click', (e) => {
+        e.preventDefault();
+        window.location.href = `WHM.html?id=${sessionStorage.getItem('loggedInUserId')}`;
+    });
+}
+
 // Dodatno: Logika za gumb za odjavo (osnovna placeholder implementacija)
 document.getElementById('gumb-odjava').addEventListener('click', (e) => {
     e.preventDefault();
