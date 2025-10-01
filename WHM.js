@@ -1,6 +1,6 @@
 const loggedInUserId = sessionStorage.getItem('loggedInUserId');
 
-console.log(${ime});
+console.log(${loggedInUserId});
 
 // Preverite, ali je uporabnik prijavljen
 if (!loggedInUserId) {
@@ -15,3 +15,4 @@ const url = new URL(window.location.href);
 url.searchParams.set('id', loggedInUserId);
 
 window.history.replaceState({}, '', url);
+
