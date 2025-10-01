@@ -55,12 +55,13 @@ app.get('/api/profiles/:id', async (req, res) => {
 app.use(express.static(path.join(__dirname, 'public'))); 
 
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html')); 
+    res.sendFile(path.join(__dirname, 'public', 'Prijava.html')); 
 });
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
+
 
 
 
