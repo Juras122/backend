@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 sessionStorage.setItem('loggedInUserId', enteredId); 
 
                 // 3. Redirect to the profile page
-                window.location.href = `profile.html?id=${enteredId}`; 
+                window.location.href = `Prijava.html?id=${enteredId}`; 
 
             } else {
                 // FALLBACK: ID is incorrect
@@ -57,3 +57,4 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 });
+
