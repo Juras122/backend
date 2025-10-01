@@ -1,3 +1,9 @@
+//Posodobiko URL z ID-jem uporabnika
+const url = new URL(window.location.href);
+url.searchParams.set('id', loggedInUserId);
+
+window.history.replaceState({}, '', url);
+
 // Nastavite to funkcijo kot asinhrono, saj bomo klicali API
 async function naloziInPrikaziProfil() {
     // 1. PRIDOBI ID UPORABNIKA IZ URL-ja
@@ -91,3 +97,4 @@ document.getElementById('gumb-odjava').addEventListener('click', (e) => {
         // window.location.href = '/login.html'; // Preusmeritev na stran za prijavo
     }
 });
+
