@@ -10,14 +10,9 @@ window.history.replaceState({}, '', url);
 
 //-------------------------------------------------------------------------------------------------------
 
-// Izločimo ID uporabnika iz URL-ja.
-// Ker je v glavi WHM.js že koda, ki zagotovi, da je 'id' v URL-ju, ga lahko takoj preberemo.
+//Preberemo ID uporabnika iz URL-ja
 const urlParams = new URLSearchParams(window.location.search);
 const userId = urlParams.get('id');
-
-/* const imeElement = document.getElementById('ime');
-const nazivElement = document.querySelector('.naziv');
-const tabelaTeloElement = document.getElementById('telo-tabele'); */
 
 // API klici
 const PROFILI_API_URL = `/api/profiles/${userId}`; // Predpostavljamo isti API kot v Prijava.js
@@ -25,9 +20,8 @@ const DELOVNI_CAS_API_URL = `/api/workhours/${userId}`; // NOVI API za delovni �
 
 // -----------------------------------------------------------------------------------
 
-/**
- * Pridobi uporabnikov profil (ime in naziv) in ga prikaže v stranski vrstici.
- */
+//Pridobi uporabnikov profil (ime in naziv) in ga prikaže v stranski vrstici.
+
 async function naloziInPrikaziProfil() {
     if (!userId) {
         // V primeru, da ID-ja ni (če je uporabnik prišel naravnost na to stran)
@@ -71,10 +65,12 @@ function prikaziPodatkeProfila(profil) {
         element.textContent = profil.naziv || 'Neznan Naziv';
     });
 }
+// -----------------------------------------------------------------------------------
 
 /**
  * Pridobi evidenco delovnega časa in jo prikaže v tabeli.
  */
+
 async function naloziInPrikaziDelovniCas() {
     if (!userId) return;
 
