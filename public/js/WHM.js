@@ -85,23 +85,8 @@ async function naloziInPrikaziDelovniCas() {
 
     } catch (error) {
         console.error('Napaka pri nalaganju evidence delovnega časa:', error);
-        prikaziSporociloNapake(tabelaTeloElement); // POSREDOVANJE ELEMENTA
     }
 }
-
-/**
- * Pomožna funkcija za prikaz sporočila, če ni podatkov.
- */
-function prikaziSporociloBrezPodatkov(tabelaTeloElement) { // SPREMENJENO: DODAJE ELEMENT KOT PARAMETER
-    if (!tabelaTeloElement) return; 
-
-    tabelaTeloElement.innerHTML = `
-        <tr>
-            <td colspan="6" style="text-align: center; padding: 20px;">
-                Za tega uporabnika še ni vnesene evidence delovnega časa.
-            </td>
-        </tr>
-    `;
 }
 
 /**
@@ -125,5 +110,6 @@ document.addEventListener('DOMContentLoaded', () => {
     naloziInPrikaziProfil();
     naloziInPrikaziDelovniCas();
 });
+
 
 // ... (nadaljevanje event listenerjev) ...
