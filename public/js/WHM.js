@@ -67,18 +67,13 @@ async function naloziInPrikaziDelovniCas() {
 
         workHoursData.forEach(entry => {
             const row = tabelaTeloElement.insertRow();
-            
-            const formattedDate = entry.datum || 'Neznano'; 
-            const hoursValue = parseFloat(entry.stevilo || 0);
-            const formattedHours = isNaN(hoursValue) ? 'N/A' : hoursValue.toFixed(2); 
 
             row.innerHTML = `
-                <td>${formattedDate}</td>
-                <td>${entry.dan || ''}</td>    
+                <td>${entry.datum || ''}</td>
+                <td>${entry.dan || ''}</td>
                 <td>${entry.prihod || ''}</td>
                 <td>${entry.odhod || ''}</td>
-                <td>${formattedHours}</td>      
-                <td>${entry.opis || ''}</td>
+                <td>${entry.stevilo || ''}</td>
             `;
         });
 
@@ -88,14 +83,12 @@ async function naloziInPrikaziDelovniCas() {
     }
 }
 
+
+
 // Ko je stran naložena, zaženemo nalaganje podatkov
 document.addEventListener('DOMContentLoaded', () => {
     naloziInPrikaziProfil();
     naloziInPrikaziDelovniCas();
 });
 
-
 // ... (nadaljevanje event listenerjev) ...
-
-
-
