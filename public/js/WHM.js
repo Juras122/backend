@@ -1,4 +1,4 @@
-/* const loggedInUserId = sessionStorage.getItem('loggedInUserId');
+const loggedInUserId = sessionStorage.getItem('loggedInUserId');
 
 // Preverite, ali je uporabnik prijavljen
 if (!loggedInUserId) {
@@ -9,4 +9,4 @@ if (!loggedInUserId) {
 //Posodobiko URL z ID-jem uporabnika
 const url = new URL(window.location.href);
 url.searchParams.set('id', loggedInUserId);
-window.history.replaceState({}, '', url); */
+window.history.replaceState({}, '', url);
