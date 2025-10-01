@@ -33,7 +33,7 @@ app.get('/api/profiles/:id', async (req, res) => {
     const userId = req.params.id;
     try {
         // Query the 'users' table (your new table name) for the user ID
-        const result = await pool.query('SELECT * FROM users WHERE id = $1', [userId]);
+        const result = await pool.query('SELECT * FROM Uporabniki WHERE id = $1', [userId]); // Pridobivanje podatkov iz SQL baze podatkov
 
         if (result.rows.length > 0) {
             // Found the user - return the user object (JSON)
@@ -61,5 +61,6 @@ app.get('/', (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
+
 
 
