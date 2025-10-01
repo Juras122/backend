@@ -1,4 +1,6 @@
 //Posodobiko URL z ID-jem uporabnika
+const loggedInUserId = sessionStorage.getItem('loggedInUserId');
+
 const url = new URL(window.location.href);
 url.searchParams.set('id', loggedInUserId);
 
@@ -97,4 +99,5 @@ document.getElementById('gumb-odjava').addEventListener('click', (e) => {
         // window.location.href = '/login.html'; // Preusmeritev na stran za prijavo
     }
 });
+
 
