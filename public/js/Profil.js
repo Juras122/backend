@@ -2,13 +2,9 @@
 async function naloziInPrikaziProfil() {
     // 1. PRIDOBI ID UPORABNIKA IZ URL-ja
     const urlParams = new URLSearchParams(window.location.search);
-    const userId = urlParams.get('id'); // TUKAJ IMATE ID
+    const userId = urlParams.get('id'); // TUKAJ IMATE ID UPORABNIKA
 
-    // Če ID ni najden, prikaži napako in prekini
-    if (!userId) {
-        // ... (koda za napako)
-        return;
-    }
+    sessionStorage.setItem('loggedInUserId', userId);
 
     // Če ID ni najden, prikaži napako in prekini
     if (!userId) {
@@ -48,22 +44,6 @@ async function naloziInPrikaziProfil() {
     }
 }
 
-function posodobiNavigacijskePovezave(userId) {
-    // Poiščite povezavo "Evidenca delovnega časa" v stranski vrstici
-    const evidencaLink = document.querySelector('.stranska-vrstica-meni a[href="WHM.html"]');
-
-    if (evidencaLink) {
-        // Dodajte ID kot parameter k URL-ju
-        evidencaLink.href = `WHM.html?id=${userId}`;
-    }
-    
-    // Opcija: posodobite tudi povezavo "Profil", da deluje, če uporabnik klika v krog
-    const profilLink = document.querySelector('.stranska-vrstica-meni a[href="Profil.html"]');
-     if (profilLink) {
-        profilLink.href = `Profil.html?id=${userId}`;
-    }
-}
-
 // Funkcija za posodabljanje elementov DOM-a s podatki profila
 function prikaziPodatkeProfila(profil) {
     // Posodobitev elementov v stranski vrstici in glavi
@@ -92,6 +72,14 @@ function prikaziPodatkeProfila(profil) {
 
 // 4. Klic funkcije ob nalaganju strani
 naloziInPrikaziProfil();
+
+//Ce pritisnemo gumb link WHM.html, nas preusmeri na WHM.html z id-jem uporabnika v URL-ju window.location.href = `Profil.html?id=${enteredId}`;
+if (document.getElementById('WHM.html')) {
+    document.getElementById('WHM.html').addEventListener('click', (e) => {
+        e.preventDefault();
+        window.location.href = `WHM.html?id=${sessionStorage.getItem('loggedInUserId')}`;
+    });
+}
 
 // Dodatno: Logika za gumb za odjavo (osnovna placeholder implementacija)
 document.getElementById('gumb-odjava').addEventListener('click', (e) => {
