@@ -10,16 +10,14 @@ window.history.replaceState({}, '', url);
 
 //-------------------------------------------------------------------------------------------------------
 
-// API za klic do baze podatkov in nalaganje strani:
-
 // Izločimo ID uporabnika iz URL-ja.
 // Ker je v glavi WHM.js že koda, ki zagotovi, da je 'id' v URL-ju, ga lahko takoj preberemo.
 const urlParams = new URLSearchParams(window.location.search);
 const userId = urlParams.get('id');
 
-const imeElement = document.getElementById('ime');
+/* const imeElement = document.getElementById('ime');
 const nazivElement = document.querySelector('.naziv');
-const tabelaTeloElement = document.getElementById('telo-tabele');
+const tabelaTeloElement = document.getElementById('telo-tabele'); */
 
 // API klici
 const PROFILI_API_URL = `/api/profiles/${userId}`; // Predpostavljamo isti API kot v Prijava.js
@@ -54,16 +52,24 @@ async function naloziInPrikaziProfil() {
         const userProfile = await response.json();
         
         // Prikaz podatkov v stranski vrstici
-        if (imeElement && userProfile.name) {
-            imeElement.textContent = userProfile.name;
-        }
-        if (nazivElement && userProfile.title) {
-            nazivElement.textContent = userProfile.title;
-        }
+        prikaziPodatkeProfila(userProfile);
 
     } catch (error) {
         console.error('Napaka pri nalaganju profila:', error);
     }
+}
+
+function prikaziPodatkeProfila(profil) {
+    // Posodobitev elementov v stranski vrstici in glavi
+    const userNameDisplayElements = document.querySelectorAll('#ime');
+    userNameDisplayElements.forEach(element => {
+        element.textContent = profil.ime || 'Neznano Ime';
+    });
+
+    const titleDisplayElements = document.querySelectorAll('.naziv, #naziv');
+    titleDisplayElements.forEach(element => {
+        element.textContent = profil.naziv || 'Neznan Naziv';
+    });
 }
 
 /**
