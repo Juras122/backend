@@ -1,33 +1,38 @@
 //-------------------------------------------------------------------------------------------------------
 
-//Nastavimo ID prijavljenega uporabnika v URL, če še ni nastavljen
+// Nastavimo ID prijavljenega uporabnika v URL, če še ni nastavljen
 const loggedInUserId = sessionStorage.getItem('loggedInUserId');
 
 const url = new URL(window.location.href);
-url.searchParams.set('id', loggedInUserId);
+if (loggedInUserId) { // ID nastavimo le, če obstaja
+    url.searchParams.set('id', loggedInUserId);
+}
 
 window.history.replaceState({}, '', url);
 
 //-------------------------------------------------------------------------------------------------------
 
-//Preberemo ID uporabnika iz URL-ja
+// Preberemo ID uporabnika iz URL-ja
 const urlParams = new URLSearchParams(window.location.search);
 const userId = urlParams.get('id');
 
 // API klici
-const PROFILI_API_URL = `/api/profiles/${userId}`; // Predpostavljamo isti API kot v Prijava.js
-const DELOVNI_CAS_API_URL = `/api/workhours/${userId}`; // NOVI API za delovni čas
+const PROFILI_API_URL = `/api/profiles/${userId}`;
+const DELOVNI_CAS_API_URL = `/api/workhours/${userId}`;
+
+// *******************************************************************
+// MORATE DODATI ta element, da koda deluje! Povezava na <tbody> v HTML-ju.
+const tabelaTeloElement = document.getElementById('tabela-telo');
+// *******************************************************************
 
 // -----------------------------------------------------------------------------------
 
-//Pridobi uporabnikov profil (ime in naziv) in ga prikaže v stranski vrstici.
+// Pridobi uporabnikov profil (ime in naziv) in ga prikaže v stranski vrstici.
 
 async function naloziInPrikaziProfil() {
     if (!userId) {
-        // V primeru, da ID-ja ni (če je uporabnik prišel naravnost na to stran)
         console.error('ID uporabnika ni najden v URL-ju.');
-        // Lahko se odločite za preusmeritev na stran za prijavo
-        // window.location.href = 'Prijava.html';
+        // window.location.href = 'Prijava.html'; // Opomba: Če želite preusmeritev
         return;
     }
 
@@ -70,24 +75,27 @@ function prikaziPodatkeProfila(profil) {
 /**
  * Pridobi evidenco delovnega časa in jo prikaže v tabeli.
  */
-
 async function naloziInPrikaziDelovniCas() {
     if (!userId) return;
+
+    // Preverimo, ali je tabelaTeloElement najden
+    if (!tabelaTeloElement) {
+        console.error('Element tabele (tabelaTeloElement) ni najden. Preveri ID "tabela-telo" v HTML-ju.');
+        return;
+    }
 
     try {
         const response = await fetch(DELOVNI_CAS_API_URL); 
 
         if (!response.ok) {
-             // Tudi 404 je ok, če ni vnosa, le sporočilo se izpiše
+            // Tudi 404 je ok, če ni vnosa
             if (response.status === 404) {
-                 prikaziSporociloBrezPodatkov();
-                 return;
+                prikaziSporociloBrezPodatkov();
+                return;
             }
             throw new Error(`HTTP napaka! Status: ${response.status}`);
         }
 
-        // Predpostavljamo, da API vrne seznam (array) vnosov: 
-        // [ { date: '2025-09-30', day: 'Ponedeljek', arrival: '08:00', departure: '16:00', hours: '8', description: 'Redno delo' }, ... ]
         const workHoursData = await response.json();
 
         // 1. Če ni podatkov, prikaži sporočilo
@@ -102,24 +110,19 @@ async function naloziInPrikaziDelovniCas() {
         workHoursData.forEach(entry => {
             const row = tabelaTeloElement.insertRow();
             
-            // Formatiranje podatkov za prikaz
-            const formattedDate = entry.date || 'Neznano'; 
-            const formattedHours = parseFloat(entry.hours).toFixed(2); // Za prikaz dveh decimalnih mest
+            // Uporabljamo ključe iz vaše baze: datum, prihod, odhod, stevilo, opis
+            const formattedDate = entry.datum || 'Neznano'; 
+            
+            // Uporabljamo ključ 'stevilo' in ga formatiramo (ob predpostavki, da je število)
+            const hoursValue = parseFloat(entry.stevilo || 0);
+            const formattedHours = isNaN(hoursValue) ? 'N/A' : hoursValue.toFixed(2); 
 
             row.innerHTML = `
-                <td>${"#datum"}</td>
-                <td>${entry.dan || ''}</td>
-                <td>${entry.prihod || ''}</td>
+                <td>${formattedDate}</td>
+                <td>${entry.dan || ''}</td>     <td>${entry.prihod || ''}</td>
                 <td>${entry.odhod || ''}</td>
-                <td>${'#stevilo' || ''}</td>
-                <td>${entry.opis || ''}</td>
+                <td>${formattedHours}</td>      <td>${entry.opis || ''}</td>
             `;
-
-            const datumElement = document.querySelectorAll('#datum');
-            datumElement.forEach(element => {
-                element.textContent = workHoursData.datum || 'N/A';
-            });
-
         });
 
 
@@ -133,6 +136,9 @@ async function naloziInPrikaziDelovniCas() {
  * Pomožna funkcija za prikaz sporočila, če ni podatkov.
  */
 function prikaziSporociloBrezPodatkov() {
+    // Klic mora biti znotraj try-catch ali preveriti element
+    if (!tabelaTeloElement) return; 
+
     tabelaTeloElement.innerHTML = `
         <tr>
             <td colspan="6" style="text-align: center; padding: 20px;">
@@ -146,6 +152,9 @@ function prikaziSporociloBrezPodatkov() {
  * Pomožna funkcija za prikaz splošne napake.
  */
 function prikaziSporociloNapake() {
+    // Klic mora biti znotraj try-catch ali preveriti element
+    if (!tabelaTeloElement) return;
+
     tabelaTeloElement.innerHTML = `
         <tr>
             <td colspan="6" style="text-align: center; padding: 20px; color: red;">
