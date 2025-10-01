@@ -87,7 +87,6 @@ async function naloziInPrikaziDelovniCas() {
         console.error('Napaka pri nalaganju evidence delovnega časa:', error);
     }
 }
-}
 
 /**
  * Pomožna funkcija za prikaz splošne napake.
@@ -113,3 +112,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 // ... (nadaljevanje event listenerjev) ...
+
