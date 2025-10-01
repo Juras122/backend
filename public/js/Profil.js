@@ -1,9 +1,14 @@
 // Nastavite to funkcijo kot asinhrono, saj bomo klicali API
 async function naloziInPrikaziProfil() {
     // 1. PRIDOBI ID UPORABNIKA IZ URL-ja
-    // Predpostavimo, da je ID uporabnika v URL-ju, npr. /profile.html?id=1
     const urlParams = new URLSearchParams(window.location.search);
-    const userId = urlParams.get('id');
+    const userId = urlParams.get('id'); // TUKAJ IMATE ID
+
+    // Če ID ni najden, prikaži napako in prekini
+    if (!userId) {
+        // ... (koda za napako)
+        return;
+    }
 
     // Če ID ni najden, prikaži napako in prekini
     if (!userId) {
@@ -40,6 +45,22 @@ async function naloziInPrikaziProfil() {
         // Napaka pri omrežnem klicu (npr. strežnik ne deluje)
         console.error("Prišlo je do napake pri pridobivanju podatkov profila:", error);
         document.querySelector('.glavno-obmocje-vsebine').innerHTML = '<h1>Napaka povezave</h1><p>Ni mogoče vzpostaviti povezave s strežnikom. Poskusite znova kasneje.</p>';
+    }
+}
+
+function posodobiNavigacijskePovezave(userId) {
+    // Poiščite povezavo "Evidenca delovnega časa" v stranski vrstici
+    const evidencaLink = document.querySelector('.stranska-vrstica-meni a[href="WHM.html"]');
+
+    if (evidencaLink) {
+        // Dodajte ID kot parameter k URL-ju
+        evidencaLink.href = `WHM.html?id=${userId}`;
+    }
+    
+    // Opcija: posodobite tudi povezavo "Profil", da deluje, če uporabnik klika v krog
+    const profilLink = document.querySelector('.stranska-vrstica-meni a[href="Profil.html"]');
+     if (profilLink) {
+        profilLink.href = `Profil.html?id=${userId}`;
     }
 }
 
