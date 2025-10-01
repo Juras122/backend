@@ -78,12 +78,6 @@ function prikaziPodatkeProfila(profil) {
 async function naloziInPrikaziDelovniCas() {
     if (!userId) return;
 
-    // Preverimo, ali je tabelaTeloElement najden
-    if (!tabelaTeloElement) {
-        console.error('Element tabele (tabelaTeloElement) ni najden. Preveri ID "tabela-telo" v HTML-ju.');
-        return;
-    }
-
     try {
         const response = await fetch(DELOVNI_CAS_API_URL); 
 
@@ -178,4 +172,5 @@ document.querySelector('.gumb-prijavi-delo').addEventListener('click', () => {
 
 document.querySelector('.gumb-odjavi-delo').addEventListener('click', () => {
     alert('Funkcija za odjavo dela še ni implementirana.');
+
 });
