@@ -16,7 +16,7 @@ const urlId = new URLSearchParams(window.location.search);
 const userId = urlId.get('id');
 
 // API klici
-const API_PROFILI = `/api/profiles/${userId}`;
+const PROFILI_API_URL = `/api/profiles/${userId}`;
 const API_PRIDOBITEV_SERIJSKE_IZ_DB = `/api/rdn`; // Pridobitev serijske številke iz baze podatkov
 
 //-----------------------------------------------------------------------------------
@@ -133,6 +133,6 @@ async function loadDelovniNalogi() {
 // Ko je stran naložena, zaženemo nalaganje podatkov
 document.addEventListener('DOMContentLoaded', () => {
     naloziInPrikaziProfil();
-    naloziInPrikaziDelovniCas();
+    loadDelovniNalogi();
 });
 //----------------------------------------------------------------------------------------
