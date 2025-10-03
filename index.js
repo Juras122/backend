@@ -26,6 +26,8 @@ pool.query('SELECT NOW()')
     .then(res => console.log('Database connected successfully:', res.rows[0].now))
     .catch(err => console.error('Database connection error:', err.message));
 
+//--------------------------------------------------------------------------------------------------------
+// API
 
 // 3. NEW API ENDPOINT: Fetch a single profile by ID
 // Clients will now call this endpoint instead of reading profiles.json
@@ -65,6 +67,29 @@ app.get('/api/workhours/:id', async (req, res) => {
     }
 });
 
+app.get('/api/rdn', async (req, res) => {
+    try {
+        // Corrected SQL query to select all required columns
+        const result = await pool.query(
+            'SELECT "serijska_stevilka", "lokacija", "vrsta", "material", "rok_izvedbe", "nacrti_url" FROM rdn'
+        );
+
+        if (result.rows.length > 0) {
+            res.json(result.rows);
+        } else {
+            // A 200 OK status with an empty array is often better for a list view
+            res.json([]);
+        }
+    } catch (error) {
+        console.error('Error fetching work orders from DB:', error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+});
+
+
+//--------------------------------------------------------------------------------------------------------
+// Preusmeritevna na prijavo, če uporabnik ni prijavljen
+
 // 4. SERVE STATIC FILES (Keep existing logic)
 // Make sure all your client-side files (HTML, CSS, JS) are in a 'public' directory
 app.use(express.static(path.join(__dirname, 'public'))); 
@@ -76,6 +101,7 @@ app.get('/', (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
+//--------------------------------------------------------------------------------------------------------
 
 
 
