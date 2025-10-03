@@ -100,14 +100,11 @@ async function loadDelovniNalogi() {
             // Note: Replace 'nalog.serial_number', 'nalog.location', etc. 
             // with the actual property names returned by your API.
             
-            row.insertCell().textContent = nalog.serijska_stevilka; // Example property
+            row.insertCell().textContent = nalog.serijska; // Example property
             row.insertCell().textContent = nalog.lokacija;          // Example property
             row.insertCell().textContent = nalog.vrsta;             // Example property
             row.insertCell().textContent = nalog.material;          // Example property
-            
-            // Format the date if necessary
-            const formattedDate = new Date(nalog.rok_izvedbe).toLocaleDateString('sl-SI'); 
-            row.insertCell().textContent = formattedDate;           // Example property
+            row.insertCell().textContent = nalog.r_razpisa;       // Example property
             
             // For 'Načrti' (Plans/Drawings), you might want a link or button
             const nacrtiCell = row.insertCell();
