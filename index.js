@@ -71,7 +71,7 @@ app.get('/api/rdn', async (req, res) => {
     try {
         // Corrected SQL query to select all required columns
         const result = await pool.query(
-            'SELECT "serijska", "lokacija", "vrsta", "material", "rok_izvedbe", "nacrti_url" FROM rdn'
+            'SELECT "serijska", "lokacija", "vrsta", "material", "r_razpisa", "nacrt" FROM rdn'
         );
 
         if (result.rows.length > 0) {
