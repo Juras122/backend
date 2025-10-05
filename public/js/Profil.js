@@ -41,8 +41,12 @@ function prikaziPodatkeProfila(profil, delovniCas) {
     nastaviPovezaveMeni(profil.id);
 
     //seštevek delovnih ur
-    const skupniDelovniCas = delovniCas.reduce((sestevek, trenutni) => sestevek + (trenutni.stevilo || 0), 0);
-
+    const skupniDelovniCas = delovniCas.reduce((sestevek, trenutni) => {
+    // Zagotovimo, da je trenutna vrednost številka, preden seštevamo
+    const ureKotStevilka = parseFloat(trenutni.ure) || 0; 
+    return sestevek + ureKotStevilka;
+    }, 0);
+    
     // 5. Prikaz delovnega časa
     posodobiBesedilo('#stat_cas', skupniDelovniCas || 'N/A');
 
@@ -140,3 +144,4 @@ document.getElementById('gumb-odjava').addEventListener('click', (e) => {
     }
 
 });
+
