@@ -224,7 +224,6 @@ a:hover {
     display: flex;
     flex-direction: column;
     width: 100%;
-    /* Preuredimo postavitev za 'Popis dela', da vključuje gumb 'Dodaj' */
 }
 
 /* Stil za VSE h3 naslove v posameznih podatkovnih blokih */
@@ -238,24 +237,38 @@ a:hover {
     padding: 0; /* Odstrani nepotrebno polnilo */
 }
 
-/* Simulacija stila za VREDNOST */
+/* ***************************************************** */
+/* KRITIČNI POPRAVEK: Onemogoči staro CSS simulacijo */
+/* ***************************************************** */
+
+/* Odstrani ::after simulacijo iz vseh H3 elementov znotraj .podatki, ki bi motila JS */
 .podatki h3::after {
-    /* Uporabimo CSS 'content' za simulacijo/praznega prostora, dokler JS ne doda vsebine */
-    content: " (Vrednost se naloži z JS)"; 
-    font-weight: 400;
-    font-size: 1rem;
-    color: #6c757d; /* Svetlo siva za dejansko vrednost */
-    display: block; /* Vrednost v novi vrstici */
-    padding-top: 0.25rem;
+    content: none; 
 }
 
 
-/* Poseben stil za opis dela, ki bi lahko bil daljši */
-.opis-dela h3::after,
-.nacrti h3::after,
-.popis-dela h3::after {
-    /* Za večja besedilna polja želimo večji spodnji rob */
+/* ***************************************************** */
+/* KRITIČNI POPRAVEK: Stil za dinamično dodan SPAN */
+/* ***************************************************** */
+
+/* Stil za dejansko VREDNOST, ki jo doda JS (v span z razredom dn-vrednost) */
+.dn-vrednost {
+    font-weight: 400;
+    font-size: 1rem;
+    color: #6c757d; 
+    display: inline; /* KLJUČNO: Prikaz v isti vrstici z labelo */
+    padding-top: 0;
+    margin-left: 0.5rem; /* Razmik med labelo in vrednostjo */
+}
+
+
+/* Poseben stil za opis dela in načrte, kjer želimo, da se vrednost prikaže pod labelo */
+.opis-dela h3 .dn-vrednost,
+.nacrti h3 .dn-vrednost {
+    display: block; /* Vrednost zasede celo vrstico pod labelo */
+    margin-top: 0.25rem;
     margin-bottom: 1rem;
+    margin-left: 0;
 }
 
 
@@ -292,11 +305,4 @@ a:hover {
 .popis-dela .dodaj:hover {
     background-color: var(--povezava-premik-barva);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-/* Popravimo h3 znotraj .popis-dela, da se pravilno prikaže */
-.popis-dela h3::after {
-    content: " (Popis dela - vsebina se naloži z JS)"; /* Specifična simulacija za popis */
-    margin-bottom: 0; /* Ne potrebujemo velikega spodnjega roba tukaj */
-    display: inline; /* Prikaz v isti vrstici z naslovom */
 }
