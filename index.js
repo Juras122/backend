@@ -86,6 +86,21 @@ app.get('/api/rdn', async (req, res) => {
     }
 });
 
+app.get('/api/rdn/:serijska', async (req, res) => {
+    const serijska = req.params.serijska;
+
+    try {
+        const result = await pool.query('SELECT * FROM rdn WHERE serijska = $1', [serijska]);
+        if (result.rows.length > 0) {
+            res.json(result.rows);
+        } else {
+            res.status(404).json({ message: 'Work hours not found' });
+        }
+    } catch (error) {
+        console.error('Error fetching work hours from DB:', error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+});
 
 //--------------------------------------------------------------------------------------------------------
 // Preusmeritevna na prijavo, če uporabnik ni prijavljen
