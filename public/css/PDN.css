@@ -196,7 +196,7 @@ tbody td {
 
 /* Premik (hover) na vrstico */
 tbody tr:hover {
-    background-color: rgba(var(--primarna-barva), 0.20); /* Zelo subtilna zelena obarvanost */
+    background-color: rgba(40, 167, 69, 0.15);
 }
 
 /* Obarvanje neparnih vrstic za lažjo berljivost (zebra efekt) */
@@ -209,3 +209,4 @@ tbody tr:last-child td {
     border-bottom: none;
 
 }
+
