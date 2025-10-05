@@ -92,9 +92,10 @@ app.get('/api/rdn/:serijska', async (req, res) => {
     try {
         const result = await pool.query('SELECT * FROM rdn WHERE serijska = $1', [serijska]);
         if (result.rows.length > 0) {
-            res.json(result.rows);
+            // POPRAVEK: Vrnemo samo prvi (in edini) objekt iz polja
+            res.json(result.rows[0]); 
         } else {
-            res.status(404).json({ message: 'Work hours not found' });
+            res.status(404).json({ message: 'Delovni nalog ni najden' });
         }
     } catch (error) {
         console.error('Error fetching work hours from DB:', error);
@@ -117,6 +118,7 @@ app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
 //--------------------------------------------------------------------------------------------------------
+
 
 
 
