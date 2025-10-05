@@ -72,6 +72,7 @@ async function naloziDelovniNalog() {
             throw new Error(`HTTP napaka! Status: ${response.status}`);
         }
         const delovniNalog = await response.json();
+        console.log('Podatki delovnega naloga:', delovniNalog); // Testni izpis v konzolo
         prikaziDelovniNalog(delovniNalog);
 
     } catch (error) {
@@ -106,3 +107,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
 });
 //----------------------------------------------------------------------------------------
+
