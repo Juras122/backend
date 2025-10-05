@@ -1,0 +1,302 @@
+/*
+ * Barvna Paleta:
+ * --primarna-barva: Živahna zelena za poudarke
+ * --sekundarna-barva: Svetlo siva za ozadja
+ * --besedilo-barva: Temno siva za berljivost
+ * --senca-svetla: Subtilna senca za globino
+ */
+:root {
+    --primarna-barva: #28a745; /* Živahna zelena */
+    --sekundarna-barva: #f8f9fa; /* Zelo svetlo siva */
+    --besedilo-barva: #343a40; /* Temno siva */
+    --povezava-premik-barva: #218838; /* Temnejša zelena za premik (hover) */
+    --kartica-ozadje: #ffffff;
+    --senca-svetla: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --senca-globoka: 0 6px 20px rgba(0, 0, 0, 0.15); /* Za izrazitejše gumbe */
+    --rdeca-barva: #dc3545; /* Rdeča za opozorila (npr. Odjava) */
+    --rdeca-premik: #c82333;
+}
+
+/* --- Osnovni Stili --- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Poppins', sans-serif; /* Moderna, čista pisava */
+    background-color: var(--sekundarna-barva);
+    color: var(--besedilo-barva);
+    line-height: 1.6;
+}
+
+a {
+    text-decoration: none;
+    color: var(--primarna-barva);
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: var(--povezava-premik-barva);
+}
+
+/* --- Glava & Navigacija --- */
+.glavna-glava {
+    background-color: var(--kartica-ozadje);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    padding: 1rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.logotip-obmocje img {
+    height: 40px; /* Prilagodi velikost logotipa */
+}
+
+.nav-povezave ul {
+    list-style: none;
+    display: flex;
+    gap: 2rem;
+}
+
+.nav-povezave a {
+    font-weight: 600;
+    color: var(--besedilo-barva);
+    padding: 0.5rem 0;
+}
+
+.nav-povezave a:hover {
+    color: var(--primarna-barva);
+    border-bottom: 2px solid var(--primarna-barva);
+}
+
+
+/* --- Glavna Postavitev Strani --- */
+.stran-vsebnik {
+    display: flex;
+    gap: 2rem;
+    padding: 2rem 3rem;
+    max-width: 1400px;
+    margin: 0 auto; /* Centriranje celotne postavitve */
+}
+
+/* --- Stranska Vrstica (Informacije o Profilu) --- */
+.profil-stranska-vrstica {
+    flex: 0 0 280px; /* Fiksna širina stranske vrstice */
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.profil-kartica {
+    background-color: var(--kartica-ozadje);
+    border-radius: 12px;
+    box-shadow: var(--senca-svetla);
+    padding: 2rem;
+    text-align: center;
+}
+
+.prikaz-uporabniskega-imena {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.naziv {
+    color: #6c757d;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+/* Stil za 'Uredi Profil' gumb */
+.gumb-uredi {
+    background-color: var(--primarna-barva);
+    color: white;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+}
+
+.gumb-uredi:hover {
+    background-color: var(--povezava-premik-barva);
+}
+
+.stranska-vrstica-meni {
+    list-style: none;
+    background-color: var(--kartica-ozadje);
+    border-radius: 12px;
+    box-shadow: var(--senca-svetla);
+    padding: 1rem 0;
+}
+
+.stranska-vrstica-meni li a {
+    display: block;
+    padding: 0.75rem 2rem;
+    color: var(--besedilo-barva);
+    font-weight: 400;
+    border-left: 3px solid transparent;
+}
+
+.stranska-vrstica-meni li a:hover,
+.stranska-vrstica-meni li a.aktivna {
+    background-color: var(--sekundarna-barva);
+    color: var(--primarna-barva);
+    border-left: 3px solid var(--primarna-barva);
+    font-weight: 600;
+}
+
+/* --- Glavno Območje Vsebine --- */
+.glavno-obmocje-vsebine {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column; /* Postavitev vsebine navpično */
+    gap: 2rem;
+}
+
+/* --- Naslov Delovnega Naloga --- */
+.naslov {
+    display: flex;
+    justify-content: space-between; /* Poravnaj H2 na levo in gumb na desno */
+    align-items: center; /* Vertikalno centriranje */
+    border-bottom: 2px solid var(--primarna-barva); /* Premakni črto na celoten .naslov div */
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.5rem; /* Povečaj spodnji rob za ločitev */
+}
+
+.naslov h2 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--besedilo-barva);
+    margin-bottom: 0; /* Odstrani nepotreben margin */
+    border-bottom: none; /* Odstrani črto, ker jo ima starš */
+}
+
+/* Stil za gumb Uredi pri naslovu */
+.naslov .uredi {
+    background-color: var(--primarna-barva);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.naslov .uredi:hover {
+    background-color: var(--povezava-premik-barva);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+
+/* --- Podatki Delovnega Naloga --- */
+.podatki {
+    background-color: var(--kartica-ozadje);
+    border-radius: 12px;
+    box-shadow: var(--senca-svetla);
+    padding: 2.5rem; /* Več notranjega roba */
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem; /* Razmak med posameznimi skupinami podatkov */
+}
+
+/* Skupine podatkov (npr. Naročnik/Izvajalec) - Uporabi flexbox za postavitev v vrsto */
+.naslov-narocnik-izvajalec,
+.razpis-datum-rok,
+.lokacija-vrsta-material {
+    display: flex;
+    gap: 3rem; /* Razmak med elementi v vrsti */
+    align-items: flex-start; /* Poravnava na vrh */
+}
+
+/* Poseben slog za elemente, ki zasedajo celotno širino */
+.opis-dela,
+.nacrti,
+.popis-dela {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    /* Preuredimo postavitev za 'Popis dela', da vključuje gumb 'Dodaj' */
+}
+
+/* Stil za VSE h3 naslove v posameznih podatkovnih blokih */
+.podatki > div h3 {
+    flex: 1; /* Omogoči, da se enakomerno razporedijo (za flex postavitve) */
+    color: var(--besedilo-barva); /* Temno siva za labelo */
+    font-weight: 600;
+    font-size: 1.1rem;
+    border-bottom: none;
+    margin-bottom: 0.1rem;
+    padding: 0; /* Odstrani nepotrebno polnilo */
+}
+
+/* Simulacija stila za VREDNOST */
+.podatki h3::after {
+    /* Uporabimo CSS 'content' za simulacijo/praznega prostora, dokler JS ne doda vsebine */
+    content: " (Vrednost se naloži z JS)"; 
+    font-weight: 400;
+    font-size: 1rem;
+    color: #6c757d; /* Svetlo siva za dejansko vrednost */
+    display: block; /* Vrednost v novi vrstici */
+    padding-top: 0.25rem;
+}
+
+
+/* Poseben stil za opis dela, ki bi lahko bil daljši */
+.opis-dela h3::after,
+.nacrti h3::after,
+.popis-dela h3::after {
+    /* Za večja besedilna polja želimo večji spodnji rob */
+    margin-bottom: 1rem;
+}
+
+
+/* Postavitev za Popis dela, vključno z gumbom */
+.popis-dela {
+    display: flex;
+    flex-direction: row; /* Postavitev h3 in gumba v vrsto */
+    justify-content: space-between; /* Poravnaj na robove */
+    align-items: center; /* Vertikalno centriranje */
+    margin-top: 1rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid #e9ecef; /* Rahla ločilna črta nad popisom */
+}
+
+.popis-dela h3 {
+    flex-grow: 1; /* Dovolimo naslovu, da zasede večino prostora */
+    margin-bottom: 0; /* Odstrani spodnji rob */
+}
+
+/* Stil za gumb Dodaj */
+.popis-dela .dodaj {
+    background-color: var(--primarna-barva);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    flex-shrink: 0; /* Prepreči zmanjšanje gumba */
+    margin-left: 1rem; /* Razmak od h3 */
+}
+
+.popis-dela .dodaj:hover {
+    background-color: var(--povezava-premik-barva);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Popravimo h3 znotraj .popis-dela, da se pravilno prikaže */
+.popis-dela h3::after {
+    content: " (Popis dela - vsebina se naloži z JS)"; /* Specifična simulacija za popis */
+    margin-bottom: 0; /* Ne potrebujemo velikega spodnjega roba tukaj */
+    display: inline; /* Prikaz v isti vrstici z naslovom */
+}

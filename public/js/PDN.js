@@ -56,9 +56,6 @@ function prikaziPodatkeProfila(profil) {
 }
 
 //-----------------------------------------------------------------------------------
-
-// js/PDN.js
-
 // Function to fetch data from the API and populate the table
 async function loadDelovniNalogi() {
     // 1. Define the API endpoint URL
@@ -94,6 +91,26 @@ async function loadDelovniNalogi() {
         delovniNalogi.forEach(nalog => {
             const row = tableBody.insertRow(); // Create a new <tr> element
 
+            // --- START MODIFICATION ---
+
+            // Make the row clickable and set a cursor style
+            row.style.cursor = 'pointer';
+
+            // Add a click event listener to the row
+            row.addEventListener('click', () => {
+                // Get the serial number from the current data object
+                const serijskaStevilka = nalog.serijska; 
+                
+                // Define the URL of the new HTML page (e.g., 'DetaljiNaloga.html')
+                //const novaStran = 'PDN_I.html'; 
+                
+                // Construct the new URL with the serial number as a query parameter
+                //window.location.href = `${novaStran}?serijska=${serijskaStevilka}`;
+                window.location.href = `PDN_I.html?id=${userId}&serijska=${serijskaStevilka}`;
+            });
+
+            // --- END MODIFICATION ---
+
             // Insert cells (<td>) for each column based on your table header:
             // Serijska številka, Lokacija, Vrsta, Material, Rok izvedbe, Načrti
             
@@ -124,6 +141,7 @@ async function loadDelovniNalogi() {
         // Display an error message to the user
         tableBody.innerHTML = '<tr><td colspan="6">Napaka pri povezavi s strežnikom. Poskusite znova.</td></tr>';
     }
+
 }
 
 //-----------------------------------------------------------------------------------
