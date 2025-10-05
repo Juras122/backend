@@ -84,19 +84,47 @@ async function naloziDelovniNalog() {
 //-------------------------------------------------------------------------------------
 // Funkcija za prikaz delovnega naloga na strani
 
+// PDN_I.js - POPRAVKI
+
+// ... (prejšnje funkcije ostanejo enake) ...
+
+// Funkcija za prikaz delovnega naloga na strani
 function prikaziDelovniNalog(delovniNalog) {
-        document.getElementById('delovni-nalog-serijska').textContent = delovniNalog.serijska || 'Ni na voljo';
-        document.getElementById('naslov').textContent = delovniNalog.naslov || 'Ni na voljo';
-        document.getElementById('narocnik').textContent = delovniNalog.narocnik || 'Ni na voljo';
-        document.getElementById('izvajalec').textContent = delovniNalog.izvajalec || 'Ni na voljo';
-        document.getElementById('d-razpisa').textContent = delovniNalog.d_razpisa || 'Ni na voljo';
-        document.getElementById('r-razpisa').textContent = delovniNalog.r_razpisa || 'Ni na voljo';
-        document.getElementById('lokacija').textContent = delovniNalog.lokacija || 'Ni na voljo';
-        document.getElementById('vrsta').textContent = delovniNalog.vrsta || 'Ni na voljo';
-        document.getElementById('material').textContent = delovniNalog.material || 'Ni na voljo';
-        document.getElementById('opis').textContent = delovniNalog.opis || 'Ni na voljo';
-        document.getElementById('nacrt').textContent = delovniNalog.nacrt || 'Ni na voljo';
+    // 1. Serijska številka
+    document.getElementById('delovni-nalog-serijska').textContent = 'Delovni nalog: ' + (delovniNalog.serijska || 'Ni na voljo');
+
+    // Pomožna funkcija za elegantno dodajanje vrednosti
+    const updateElement = (id, label, value) => {
+        const element = document.getElementById(id);
+        if (element) {
+            // Logika: 
+            // 1. Ohrani labelo (npr. 'Naročnik'). 
+            // 2. Dodaj dinamično vrednost v <span>, ki jo CSS stilizira za prikaz poleg labele.
+            element.innerHTML = `${label}: <span class="dn-vrednost">${value || 'Ni na voljo'}</span>`;
+        }
+    };
+    
+    // Uporaba popravljenih ID-jev in label:
+    updateElement('naslov', 'Naslov', delovniNalog.naslov);
+    updateElement('narocnik', 'Naročnik', delovniNalog.narocnik);
+    updateElement('izvajalec', 'Izvajalec', delovniNalog.izvajalec);
+    updateElement('d-razpisa', 'Datum razpisa', delovniNalog.d_razpisa);
+    
+    // Uporaba POPRAVLJENEGA ID-ja: rok-izvedbe
+    updateElement('rok-izvedbe', 'Rok izvedbe', delovniNalog.r_razpisa); 
+
+    updateElement('lokacija', 'Lokacija', delovniNalog.lokacija);
+    updateElement('vrsta', 'Vrsta', delovniNalog.vrsta);
+    updateElement('material', 'Material', delovniNalog.material);
+    updateElement('opis', 'Opis dela', delovniNalog.opis);
+    
+    // Uporaba POPRAVLJENEGA ID-ja: nacrti
+    updateElement('nacrti', 'Načrti', delovniNalog.nacrt); 
+    
+    // Opomba: Popis dela (popis-dela-naslov) ne potrebuje dinamične vrednosti
 }
+
+// ... (ostali del ostane enak) ...
         
 
 //----------------------------------------------------------------------------------------
@@ -107,3 +135,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
 });
 //----------------------------------------------------------------------------------------
+
