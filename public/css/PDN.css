@@ -198,15 +198,10 @@ tbody td {
 tbody tr:hover {
     background-color: rgba(40, 167, 69, 0.15);
 }
-
-/* Obarvanje neparnih vrstic za lažjo berljivost (zebra efekt) */
-tbody tr:nth-child(odd) {
-    background-color: #fcfcfc;
-}
-
 /* Posebna obravnava zadnje vrstice */
 tbody tr:last-child td {
     border-bottom: none;
 
 }
+
 
