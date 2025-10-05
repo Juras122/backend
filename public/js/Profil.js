@@ -43,7 +43,7 @@ function prikaziPodatkeProfila(profil, delovniCas) {
     //seštevek delovnih ur
     const skupniDelovniCas = delovniCas.reduce((sestevek, trenutni) => {
     // Zagotovimo, da je trenutna vrednost številka, preden seštevamo
-    const ureKotStevilka = parseFloat(trenutni.ure) || 0; 
+    const ureKotStevilka = parseFloat(trenutni.stevilo) || 0; 
     return sestevek + ureKotStevilka;
     }, 0);
     
