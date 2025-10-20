@@ -8,6 +8,11 @@ const cors = require('cors'); // <-- Uvozi knjižnico
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+app.use(cors({
+    origin: 'https://zaposleni-lpt-test.onrender.com', // Dovoljen je samo vaš frontend
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+}));
+
 // 2. DATABASE CONNECTION SETUP
 // Render automatically provides a DATABASE_URL environment variable.
 // We must configure SSL for a secure connection, as required by Render.
@@ -130,6 +135,7 @@ app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
 //--------------------------------------------------------------------------------------------------------
+
 
 
 
