@@ -10,6 +10,7 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors({
     origin: 'https://zaposleni-lpt-test.onrender.com', // Dovoljen je samo vaš frontend
+    origin: 'https://185bf941-648e-4a60-8785-0f06730e4ab2.lovableproject.com',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
 }));
 
@@ -135,6 +136,7 @@ app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
 //--------------------------------------------------------------------------------------------------------
+
 
 
 
