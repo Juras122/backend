@@ -8,10 +8,18 @@ const cors = require('cors'); // <-- Uvozi knjižnico
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Definicija vseh dovoljenih domen (originov)
+const allowedOrigins = [
+    'https://zaposleni-lpt-test.onrender.com', 
+    'https://185bf941-648e-4a60-8785-0f06730e4ab2.lovableproject.com',
+    // TUKAJ LAHKO DODATE VSE OSTALE DOMENE (npr. http://localhost:5173 za lokalni razvoj)
+];
+
+// Konfiguracija CORS: 'origin' je sedaj polje 'allowedOrigins'
 app.use(cors({
-    origin: 'https://zaposleni-lpt-test.onrender.com', // Dovoljen je samo vaš frontend
-    origin: 'https://185bf941-648e-4a60-8785-0f06730e4ab2.lovableproject.com',
+    origin: allowedOrigins, // Uporabite polje dovoljenih domen
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true // pogosto potrebno, če uporabljate piškotke (cookies) ali avtentikacijo
 }));
 
 // 2. DATABASE CONNECTION SETUP
@@ -136,6 +144,7 @@ app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
 //--------------------------------------------------------------------------------------------------------
+
 
 
 
