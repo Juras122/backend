@@ -2,9 +2,11 @@
 const express = require('express');
 const path = require('path');
 const { Pool } = require('pg');
+const cors = require('cors');
 
 //Nastavljanje expressa in porta
 const app = express();
+app.use(cors());
 const PORT = process.env.PORT || 3000;
 
 // 2. DATABASE CONNECTION SETUP
@@ -118,6 +120,7 @@ app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
 //--------------------------------------------------------------------------------------------------------
+
 
 
 
