@@ -2,6 +2,7 @@
 const express = require('express');
 const path = require('path');
 const { Pool } = require('pg');
+const cors = require('cors'); // <-- Uvozi knjižnico
 
 //Nastavljanje expressa in porta
 const app = express();
@@ -129,6 +130,7 @@ app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
 //--------------------------------------------------------------------------------------------------------
+
 
 
 
