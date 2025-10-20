@@ -103,12 +103,33 @@ app.get('/api/rdn/:serijska', async (req, res) => {
     }
 });
 
+// index.js (Dodatek za skladišče)
+
+app.get('/api/warehouse', async (req, res) => {
+    try {
+        // Popravi ime tabele in stolpcev glede na vašo dejansko bazo
+        const result = await pool.query(
+            'SELECT id, serijska_koda, ime, stevilo, enota, lokacija, datum_vnosa, zadnja_sprememba FROM warehouse' 
+        );
+
+        if (result.rows.length > 0) {
+            res.json(result.rows);
+        } else {
+            res.json([]);
+        }
+    } catch (error) {
+        console.error('Error fetching warehouse items from DB:', error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+});
+
 //--------------------------------------------------------------------------------------------------------
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
 //--------------------------------------------------------------------------------------------------------
+
 
 
 
