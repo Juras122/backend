@@ -104,20 +104,12 @@ app.get('/api/rdn/:serijska', async (req, res) => {
 });
 
 //--------------------------------------------------------------------------------------------------------
-// Preusmeritevna na prijavo, če uporabnik ni prijavljen
-
-// 4. SERVE STATIC FILES (Keep existing logic)
-// Make sure all your client-side files (HTML, CSS, JS) are in a 'public' directory
-app.use(express.static(path.join(__dirname, 'public'))); 
-
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'Prijava.html')); 
-});
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
 //--------------------------------------------------------------------------------------------------------
+
 
 
 
