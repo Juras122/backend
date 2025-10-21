@@ -140,7 +140,7 @@ app.get('/api/warehouse', async (req, res) => {
 app.get('/api/profiles', async (req, res) => {
   try {
     // SQL query za pridobitev vseh uporabnikov
-    const result = await pool.query('SELECT * FROM profiles ORDER BY id');
+    const result = await pool.query('SELECT * FROM users ORDER BY id');
     res.json(result.rows);
   } catch (error) {
     console.error('Napaka pri pridobivanju uporabnikov:', error);
@@ -154,6 +154,7 @@ app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
 //--------------------------------------------------------------------------------------------------------
+
 
 
 
