@@ -189,12 +189,96 @@ app.get('/api/work-entries/:workOrderId', async (req, res) => {
 });
 
 
+// ============================================
+// DODAJTE TO V VAŠ index.js FILE
+// ============================================
+
+// 1️⃣ GET endpoint - pridobivanje work entries za določen delovni nalog
+app.get('/api/work-entries/:workOrderId', async (req, res) => {
+    const { workOrderId } = req.params;
+
+    try {
+        const result = await pool.query(
+            `SELECT 
+                id,
+                work_order_id,
+                naziv_elementa,
+                znacilka,
+                dolzina,
+                st_elemtov,
+                material,
+                kvadratura,
+                datum_vnosa
+             FROM we 
+             WHERE work_order_id = $1 
+             ORDER BY datum_vnosa DESC`,
+            [workOrderId]
+        );
+        
+        res.json(result.rows);
+    } catch (error) {
+        console.error('Error fetching work entries:', error);
+        res.status(500).json({ 
+            message: 'Napaka pri pridobivanju work entries',
+            error: error.message 
+        });
+    }
+});
+
+// 2️⃣ POST endpoint - dodajanje novega work entry
+app.post('/api/work-entries', async (req, res) => {
+    const { 
+        workOrderId, 
+        nazivElementa, 
+        znacilka, 
+        dolzina, 
+        stElementov, 
+        material, 
+        kvadratura 
+    } = req.body;
+
+    // Validacija
+    if (!workOrderId || !nazivElementa) {
+        return res.status(400).json({ 
+            message: 'workOrderId in nazivElementa sta obvezna polja' 
+        });
+    }
+
+    try {
+        const result = await pool.query(
+            `INSERT INTO we 
+             (id, work_order_id, naziv_elementa, znacilka, dolzina, st_elemtov, material, kvadratura, datum_vnosa) 
+             VALUES (gen_random_uuid(), $1, $2, $3, $4, $5, $6, $7, NOW()) 
+             RETURNING *`,
+            [
+                workOrderId, 
+                nazivElementa, 
+                znacilka || null, 
+                dolzina || null, 
+                stElementov || null, 
+                material || null, 
+                kvadratura || null
+            ]
+        );
+        
+        res.status(201).json(result.rows[0]);
+    } catch (error) {
+        console.error('Error adding work entry:', error);
+        res.status(500).json({ 
+            message: 'Napaka pri shranjevanju work entry',
+            error: error.message 
+        });
+    }
+});
+
+
 //--------------------------------------------------------------------------------------------------------
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
 //--------------------------------------------------------------------------------------------------------
+
 
 
 
