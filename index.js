@@ -12,6 +12,7 @@ const PORT = process.env.PORT || 3000;
 const allowedOrigins = [
     'https://zaposleni-lpt-test.onrender.com', 
     'https://185bf941-648e-4a60-8785-0f06730e4ab2.lovableproject.com',
+    'http://localhost:8080/',
     // TUKAJ LAHKO DODATE VSE OSTALE DOMENE (npr. http://localhost:5173 za lokalni razvoj)
 ];
 
@@ -144,6 +145,7 @@ app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
 //--------------------------------------------------------------------------------------------------------
+
 
 
 
