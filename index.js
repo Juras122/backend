@@ -119,8 +119,6 @@ app.get('/api/rdn/:serijska', async (req, res) => {
     }
 });
 
-// index.js (Dodatek za skladišče)
-
 app.get('/api/warehouse', async (req, res) => {
     try {
         // Popravi ime tabele in stolpcev glede na vašo dejansko bazo
@@ -139,12 +137,24 @@ app.get('/api/warehouse', async (req, res) => {
     }
 });
 
+app.get('/api/profiles', async (req, res) => {
+  try {
+    // SQL query za pridobitev vseh uporabnikov
+    const result = await pool.query('SELECT * FROM profiles ORDER BY id');
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Napaka pri pridobivanju uporabnikov:', error);
+    res.status(500).json({ error: 'Napaka pri pridobivanju podatkov' });
+  }
+});
+
 //--------------------------------------------------------------------------------------------------------
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
 //--------------------------------------------------------------------------------------------------------
+
 
 
 
