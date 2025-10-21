@@ -23,6 +23,9 @@ app.use(cors({
     credentials: true // pogosto potrebno, če uporabljate piškotke (cookies) ali avtentikacijo
 }));
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 // 2. DATABASE CONNECTION SETUP
 // Render automatically provides a DATABASE_URL environment variable.
 // We must configure SSL for a secure connection, as required by Render.
@@ -199,6 +202,7 @@ app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
 //--------------------------------------------------------------------------------------------------------
+
 
 
 
