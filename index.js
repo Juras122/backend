@@ -86,41 +86,81 @@ app.get('/api/workhours/:id', async (req, res) => {
     }
 });
 
+// 1. GET - Vsi delovni nalogi (POPRAVLJENO)
 app.get('/api/rdn', async (req, res) => {
     try {
-        // Corrected SQL query to select all required columns
-        const result = await pool.query(
-            'SELECT "serijska", "lokacija", "vrsta", "material", "r_razpisa", "nacrt" FROM rdn'
-        );
-
-        if (result.rows.length > 0) {
-            res.json(result.rows);
-        } else {
-            // A 200 OK status with an empty array is often better for a list view
-            res.json([]);
-        }
+        const result = await pool.query('SELECT * FROM rdn ORDER BY serijska DESC');
+        res.json(result.rows.length > 0 ? result.rows : []);
     } catch (error) {
         console.error('Error fetching work orders from DB:', error);
         res.status(500).json({ message: 'Internal Server Error' });
     }
 });
 
+// 2. GET - En delovni nalog (OSTANE ENAKO)
 app.get('/api/rdn/:serijska', async (req, res) => {
     const serijska = req.params.serijska;
-
     try {
         const result = await pool.query('SELECT * FROM rdn WHERE serijska = $1', [serijska]);
         if (result.rows.length > 0) {
-            // POPRAVEK: Vrnemo samo prvi (in edini) objekt iz polja
-            res.json(result.rows[0]); 
+            res.json(result.rows[0]);
         } else {
             res.status(404).json({ message: 'Delovni nalog ni najden' });
         }
     } catch (error) {
-        console.error('Error fetching work hours from DB:', error);
+        console.error('Error fetching work order detail from DB:', error);
         res.status(500).json({ message: 'Internal Server Error' });
     }
 });
+
+// 3. POST - Nov delovni nalog (NOV ENDPOINT)
+app.post('/api/rdn', async (req, res) => {
+    try {
+        const {
+            serijska, naslov, narocnik, izvajalec, status,
+            lokacija, vrsta, material, d_razpisa, r_razpisa, opis, nacrt
+        } = req.body;
+
+        // Validacija
+        if (!serijska || !naslov || !status) {
+            return res.status(400).json({ 
+                error: 'Manjkajo obvezna polja: serijska, naslov, status' 
+            });
+        }
+
+        // Preveri duplikate
+        const checkQuery = 'SELECT serijska FROM rdn WHERE serijska = $1';
+        const checkResult = await pool.query(checkQuery, [serijska]);
+        
+        if (checkResult.rows.length > 0) {
+            return res.status(409).json({ 
+                error: 'Delovni nalog s to serijsko številko že obstaja' 
+            });
+        }
+
+        // Vstavi
+        const insertQuery = `
+            INSERT INTO rdn (
+                serijska, naslov, narocnik, izvajalec, status, 
+                lokacija, vrsta, material, d_razpisa, r_razpisa, opis, nacrt
+            ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+            RETURNING *
+        `;
+        
+        const values = [
+            serijska, naslov || '', narocnik || '', izvajalec || '', status,
+            lokacija || '', vrsta || '', material || '', 
+            d_razpisa || null, r_razpisa || null, opis || '', nacrt || null
+        ];
+
+        const result = await pool.query(insertQuery, values);
+        res.status(201).json(result.rows[0]);
+    } catch (error) {
+        console.error('Napaka pri kreiranju delovnega naloga:', error);
+        res.status(500).json({ error: 'Napaka na strežniku' });
+    }
+});
+
 
 app.get('/api/warehouse', async (req, res) => {
     try {
@@ -202,6 +242,7 @@ app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
 //--------------------------------------------------------------------------------------------------------
+
 
 
 
