@@ -18,7 +18,7 @@ const allowedOrigins = [
 
 // Konfiguracija CORS: 'origin' je sedaj polje 'allowedOrigins'
 app.use(cors({
-    origin: allowedOrigins, // Uporabite polje dovoljenih domen
+    origin: '*', // Uporabite polje dovoljenih domen
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true // pogosto potrebno, če uporabljate piškotke (cookies) ali avtentikacijo
 }));
@@ -202,6 +202,7 @@ app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
 //--------------------------------------------------------------------------------------------------------
+
 
 
 
