@@ -89,7 +89,7 @@ app.get('/api/workhours/:id', async (req, res) => {
 // 1. GET - Vsi delovni nalogi (POPRAVLJENO)
 app.get('/api/rdn', async (req, res) => {
     try {
-        const result = await pool.query('SELECT * FROM NS_TO_delovni_nalogi_vsi ORDER BY serijska DESC');
+        const result = await pool.query('SELECT * FROM NS_TO_delovni_nalogi ORDER BY serijska DESC');
         res.json(result.rows.length > 0 ? result.rows : []);
     } catch (error) {
         console.error('Error fetching work orders from DB:', error);
@@ -101,7 +101,7 @@ app.get('/api/rdn', async (req, res) => {
 app.get('/api/rdn/:serijska', async (req, res) => {
     const serijska = req.params.serijska;
     try {
-        const result = await pool.query('SELECT * FROM NS_TO_delovni_nalogi_vsi WHERE serijska = $1', [serijska]);
+        const result = await pool.query('SELECT * FROM NS_TO_delovni_nalogi WHERE serijska = $1', [serijska]);
         if (result.rows.length > 0) {
             res.json(result.rows[0]);
         } else {
@@ -129,7 +129,7 @@ app.post('/api/rdn', async (req, res) => {
         }
 
         // Preveri duplikate
-        const checkQuery = 'SELECT serijska FROM NS_TO_delovni_nalogi_vsi WHERE serijska = $1';
+        const checkQuery = 'SELECT serijska FROM NS_TO_delovni_nalogi WHERE serijska = $1';
         const checkResult = await pool.query(checkQuery, [serijska]);
         
         if (checkResult.rows.length > 0) {
@@ -140,7 +140,7 @@ app.post('/api/rdn', async (req, res) => {
 
         // Vstavi
         const insertQuery = `
-            INSERT INTO NS_TO_delovni_nalogi_vsi (
+            INSERT INTO NS_TO_delovni_nalogi (
                 serijska, naslov, narocnik, izvajalec, status, 
                 lokacija, vrsta, material, d_razpisa, r_razpisa, opis, nacrt
             ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
@@ -242,6 +242,7 @@ app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
 //--------------------------------------------------------------------------------------------------------
+
 
 
 
