@@ -53,8 +53,8 @@ pool.query('SELECT NOW()')
 app.get('/api/profiles/:id', async (req, res) => {
     const userId = req.params.id;
     try {
-        // Query the 'users' table (your new table name) for the user ID
-        const result = await pool.query('SELECT * FROM users WHERE id = $1', [userId]); // Pridobivanje podatkov iz SQL baze podatkov
+        // Query the 'uporabniki' table (your new table name) for the user ID
+        const result = await pool.query('SELECT * FROM uporabniki WHERE id = $1', [userId]); // Pridobivanje podatkov iz SQL baze podatkov
 
         if (result.rows.length > 0) {
             // Found the user - return the user object (JSON)
@@ -183,7 +183,7 @@ app.get('/api/warehouse', async (req, res) => {
 app.get('/api/profiles', async (req, res) => {
   try {
     // SQL query za pridobitev vseh uporabnikov
-    const result = await pool.query('SELECT * FROM users ORDER BY id');
+    const result = await pool.query('SELECT * FROM uporabniki ORDER BY id');
     res.json(result.rows);
   } catch (error) {
     console.error('Napaka pri pridobivanju uporabnikov:', error);
@@ -242,6 +242,7 @@ app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
 //--------------------------------------------------------------------------------------------------------
+
 
 
 
