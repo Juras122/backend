@@ -359,6 +359,74 @@ app.get('/api/work-entries/:workOrderId', async (req, res) => {
   }
 });
 
+// PUT /api/work-entries/:id - Posodobi work entry
+app.put('/api/work-entries/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { nazivElementa, znacilka, dolzina, stElementov, material, kvadratura } = req.body;
+
+    // Preveri če entry obstaja
+    const checkQuery = 'SELECT * FROM ns_to_popis_dela WHERE id = $1';
+    const checkResult = await pool.query(checkQuery, [id]);
+    
+    if (checkResult.rows.length === 0) {
+      return res.status(404).json({ 
+        error: 'Work entry ne obstaja' 
+      });
+    }
+
+    // Dinamično gradimo UPDATE query samo za podana polja
+    const fieldsToUpdate = [];
+    const values = [];
+    let paramIndex = 1;
+
+    if (nazivElementa !== undefined) {
+      fieldsToUpdate.push(`naziv_elementa = $${paramIndex++}`);
+      values.push(nazivElementa);
+    }
+    if (znacilka !== undefined) {
+      fieldsToUpdate.push(`znacilka = $${paramIndex++}`);
+      values.push(znacilka);
+    }
+    if (dolzina !== undefined) {
+      fieldsToUpdate.push(`dolzina = $${paramIndex++}`);
+      values.push(dolzina);
+    }
+    if (stElementov !== undefined) {
+      fieldsToUpdate.push(`st_elementov = $${paramIndex++}`);
+      values.push(stElementov);
+    }
+    if (material !== undefined) {
+      fieldsToUpdate.push(`material = $${paramIndex++}`);
+      values.push(material);
+    }
+    if (kvadratura !== undefined) {
+      fieldsToUpdate.push(`kvadratura = $${paramIndex++}`);
+      values.push(kvadratura);
+    }
+
+    if (fieldsToUpdate.length === 0) {
+      return res.status(400).json({ error: 'Ni polj za posodobitev' });
+    }
+
+    // Dodaj id kot zadnji parameter
+    values.push(id);
+
+    const updateQuery = `
+      UPDATE ns_to_popis_dela 
+      SET ${fieldsToUpdate.join(', ')}
+      WHERE id = $${paramIndex}
+      RETURNING *
+    `;
+
+    const result = await pool.query(updateQuery, values);
+    res.json(result.rows[0]);
+  } catch (error) {
+    console.error('Napaka pri posodabljanju work entry:', error);
+    res.status(500).json({ error: 'Napaka na strežniku' });
+  }
+});
+
 
 
 
@@ -369,6 +437,7 @@ app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
 //--------------------------------------------------------------------------------------------------------
+
 
 
 
