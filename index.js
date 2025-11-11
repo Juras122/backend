@@ -327,7 +327,7 @@ app.post('/api/work-entries', async (req, res) => {
     }
 
     const result = await pool.query(
-      `INSERT INTO ns_to_popis_dela (work_order_id, naziv_elementa, znacilka, dolzina, st_elemtov, material, kvadratura, datum_vnosa)
+      `INSERT INTO ns_to_popis_dela (work_order_id, naziv_elementa, znacilka, dolzina, st_elemetov, material, kvadratura, datum_vnosa)
        VALUES ($1, $2, $3, $4, $5, $6, $7, NOW())
        RETURNING *`,
       [workOrderId, nazivElementa, znacilka || null, dolzina || null, stElementov || null, material || null, kvadratura || null]
@@ -369,6 +369,7 @@ app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
 //--------------------------------------------------------------------------------------------------------
+
 
 
 
