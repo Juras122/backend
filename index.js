@@ -160,7 +160,134 @@ app.post('/api/rdn', async (req, res) => {
         res.status(500).json({ error: 'Napaka na strežniku' });
     }
 });
+//--------------------------------------
+//Uredi delovni nalog in izbriši delovni nalog
+// 4. PUT - Posodobi delovni nalog (NOV ENDPOINT)
+app.put('/api/rdn/:serijska', async (req, res) => {
+    try {
+        const serijska = req.params.serijska;
+        const {
+            naslov, narocnik, izvajalec, status,
+            lokacija, vrsta, material, d_razpisa, r_razpisa, opis, nacrt
+        } = req.body;
 
+        // Preveri če delovni nalog obstaja
+        const checkQuery = 'SELECT serijska FROM ns_to_delovni_nalogi WHERE serijska = $1';
+        const checkResult = await pool.query(checkQuery, [serijska]);
+        
+        if (checkResult.rows.length === 0) {
+            return res.status(404).json({ 
+                error: 'Delovni nalog s to serijsko številko ne obstaja' 
+            });
+        }
+
+        // Dinamično gradimo UPDATE query samo za podana polja
+        const fieldsToUpdate = [];
+        const values = [];
+        let paramIndex = 1;
+
+        if (naslov !== undefined) {
+            fieldsToUpdate.push(`naslov = $${paramIndex++}`);
+            values.push(naslov);
+        }
+        if (narocnik !== undefined) {
+            fieldsToUpdate.push(`narocnik = $${paramIndex++}`);
+            values.push(narocnik);
+        }
+        if (izvajalec !== undefined) {
+            fieldsToUpdate.push(`izvajalec = $${paramIndex++}`);
+            values.push(izvajalec);
+        }
+        if (status !== undefined) {
+            fieldsToUpdate.push(`status = $${paramIndex++}`);
+            values.push(status);
+        }
+        if (lokacija !== undefined) {
+            fieldsToUpdate.push(`lokacija = $${paramIndex++}`);
+            values.push(lokacija);
+        }
+        if (vrsta !== undefined) {
+            fieldsToUpdate.push(`vrsta = $${paramIndex++}`);
+            values.push(vrsta);
+        }
+        if (material !== undefined) {
+            fieldsToUpdate.push(`material = $${paramIndex++}`);
+            values.push(material);
+        }
+        if (d_razpisa !== undefined) {
+            fieldsToUpdate.push(`d_razpisa = $${paramIndex++}`);
+            values.push(d_razpisa);
+        }
+        if (r_razpisa !== undefined) {
+            fieldsToUpdate.push(`r_razpisa = $${paramIndex++}`);
+            values.push(r_razpisa);
+        }
+        if (opis !== undefined) {
+            fieldsToUpdate.push(`opis = $${paramIndex++}`);
+            values.push(opis);
+        }
+        if (nacrt !== undefined) {
+            fieldsToUpdate.push(`nacrt = $${paramIndex++}`);
+            values.push(nacrt);
+        }
+
+        if (fieldsToUpdate.length === 0) {
+            return res.status(400).json({ error: 'Ni polj za posodobitev' });
+        }
+
+        // Dodaj serijska kot zadnji parameter
+        values.push(serijska);
+
+        const updateQuery = `
+            UPDATE ns_to_delovni_nalogi 
+            SET ${fieldsToUpdate.join(', ')}
+            WHERE serijska = $${paramIndex}
+            RETURNING *
+        `;
+
+        const result = await pool.query(updateQuery, values);
+        res.json(result.rows[0]);
+    } catch (error) {
+        console.error('Napaka pri posodabljanju delovnega naloga:', error);
+        res.status(500).json({ error: 'Napaka na strežniku' });
+    }
+});
+
+
+// 5. DELETE - Izbriši delovni nalog (NOV ENDPOINT)
+app.delete('/api/rdn/:serijska', async (req, res) => {
+    try {
+        const serijska = req.params.serijska;
+
+        // Preveri če delovni nalog obstaja
+        const checkQuery = 'SELECT serijska FROM ns_to_delovni_nalogi WHERE serijska = $1';
+        const checkResult = await pool.query(checkQuery, [serijska]);
+        
+        if (checkResult.rows.length === 0) {
+            return res.status(404).json({ 
+                error: 'Delovni nalog s to serijsko številko ne obstaja' 
+            });
+        }
+
+        // Najprej izbriši vse povezane work entries iz tabele 'we'
+        // To prepreči napake zaradi foreign key constraints
+        await pool.query('DELETE FROM we WHERE work_order_id = $1', [serijska]);
+
+        // Nato izbriši delovni nalog
+        await pool.query('DELETE FROM ns_to_delovni_nalogi WHERE serijska = $1', [serijska]);
+
+        res.json({ 
+            message: 'Delovni nalog uspešno izbrisan',
+            serijska: serijska 
+        });
+    } catch (error) {
+        console.error('Napaka pri brisanju delovnega naloga:', error);
+        res.status(500).json({ error: 'Napaka na strežniku' });
+    }
+});
+
+
+//-----------------------------------
 
 app.get('/api/warehouse', async (req, res) => {
     try {
@@ -242,6 +369,7 @@ app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
 //--------------------------------------------------------------------------------------------------------
+
 
 
 
