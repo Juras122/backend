@@ -271,7 +271,7 @@ app.delete('/api/rdn/:serijska', async (req, res) => {
 
         // Najprej izbriši vse povezane work entries iz tabele 'we'
         // To prepreči napake zaradi foreign key constraints
-        await pool.query('DELETE FROM we WHERE work_order_id = $1', [serijska]);
+        await pool.query('DELETE FROM ns_to_popis_dela WHERE work_order_id = $1', [serijska]);
 
         // Nato izbriši delovni nalog
         await pool.query('DELETE FROM ns_to_delovni_nalogi WHERE serijska = $1', [serijska]);
@@ -327,7 +327,7 @@ app.post('/api/work-entries', async (req, res) => {
     }
 
     const result = await pool.query(
-      `INSERT INTO we (work_order_id, naziv_elementa, znacilka, dolzina, st_elemtov, material, kvadratura, datum_vnosa)
+      `INSERT INTO ns_to_popis_dela (work_order_id, naziv_elementa, znacilka, dolzina, st_elemtov, material, kvadratura, datum_vnosa)
        VALUES ($1, $2, $3, $4, $5, $6, $7, NOW())
        RETURNING *`,
       [workOrderId, nazivElementa, znacilka || null, dolzina || null, stElementov || null, material || null, kvadratura || null]
@@ -348,7 +348,7 @@ app.get('/api/work-entries/:workOrderId', async (req, res) => {
     const { workOrderId } = req.params;
 
     const result = await pool.query(
-      'SELECT * FROM we WHERE work_order_id = $1 ORDER BY datum_vnosa DESC',
+      'SELECT * FROM ns_to_popis_dela WHERE work_order_id = $1 ORDER BY datum_vnosa DESC',
       [workOrderId]
     );
 
@@ -369,6 +369,7 @@ app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
 //--------------------------------------------------------------------------------------------------------
+
 
 
 
