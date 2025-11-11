@@ -320,26 +320,32 @@ app.get('/api/profiles', async (req, res) => {
 
 app.post('/api/work-entries', async (req, res) => {
   try {
-    const { workOrderId, nazivElementa, znacilka, dolzina, stElementov, material, kvadratura } = req.body;
+    const { id, workOrderId, nazivElementa, znacilka, dolzina, stElementov, material, kvadratura } = req.body;
 
-    if (!workOrderId || !nazivElementa) {
-      return res.status(400).json({ message: 'Manjkajo obvezna polja' });
+    // Validacija
+    if (!id || !workOrderId || !nazivElementa) {
+      return res.status(400).json({ message: 'Manjkajo obvezna polja: id, workOrderId, nazivElementa' });
+    }
+
+    // Preveri dolžino ID-ja (max 30 znakov)
+    if (id.length > 30) {
+      return res.status(400).json({ message: 'ID je predolg (max 30 znakov)' });
     }
 
     const result = await pool.query(
-      `INSERT INTO ns_to_popis_dela (work_order_id, naziv_elementa, znacilka, dolzina, st_elementov, material, kvadratura, datum_vnosa)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, NOW())
+      `INSERT INTO ns_to_popis_dela (id, work_order_id, naziv_elementa, znacilka, dolzina, st_elementov, material, kvadratura, datum_vnosa)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW())
        RETURNING *`,
-      [workOrderId, nazivElementa, znacilka || null, dolzina || null, stElementov || null, material || null, kvadratura || null]
+      [id, workOrderId, nazivElementa, znacilka || null, dolzina || null, stElementov || null, material || null, kvadratura || null]
     );
 
     res.status(201).json(result.rows[0]);
   } catch (error) {
     console.error('Error adding work entry:', error);
-    console.error('Error details:', error.message); // ← Dodajte ta log!
     res.status(500).json({ message: 'Internal Server Error', error: error.message });
   }
 });
+
 
 
 // GET /api/work-entries/:workOrderId
@@ -426,6 +432,35 @@ app.put('/api/work-entries/:id', async (req, res) => {
     res.status(500).json({ error: 'Napaka na strežniku' });
   }
 });
+
+// DELETE /api/work-entries/:id - Izbriši work entry
+app.delete('/api/work-entries/:id', async (req, res) => {
+  try {
+    const entryId = req.params.id;
+
+    // Preveri če entry obstaja
+    const checkQuery = 'SELECT id FROM ns_to_popis_dela WHERE id = $1';
+    const checkResult = await pool.query(checkQuery, [entryId]);
+    
+    if (checkResult.rows.length === 0) {
+      return res.status(404).json({ 
+        error: 'Popis dela ne obstaja' 
+      });
+    }
+
+    // Izbriši entry
+    await pool.query('DELETE FROM ns_to_popis_dela WHERE id = $1', [entryId]);
+
+    res.json({ 
+      message: 'Popis dela uspešno izbrisan',
+      id: entryId 
+    });
+  } catch (error) {
+    console.error('Napaka pri brisanju popisa dela:', error);
+    res.status(500).json({ error: 'Napaka na strežniku' });
+  }
+});
+
 
 
 
